@@ -1,0 +1,36 @@
+format_version: 3.3.0
+name: beyondtrust_password_safe
+title: "BeyondInsight and Password Safe"
+version: 0.0.1
+source:
+  license: "Elastic-2.0"
+description: "It enables real-time monitoring of privileged account access, session recordings, and password checkout patterns to help security teams maintain compliance and quickly identify potential privilege abuse."
+type: integration
+categories:
+  - custom
+conditions:
+  kibana:
+    version: "^8.15.3"
+  elastic:
+    subscription: "basic"
+screenshots:
+  - src: /img/sample-screenshot.png
+    title: Sample screenshot
+    size: 600x600
+    type: image/png
+icons:
+  - src: /img/sample-logo.svg
+    title: Sample logo
+    size: 32x32
+    type: image/svg+xml
+policy_templates:
+  - name: sample
+    title: Sample logs
+    description: Collect sample logs
+    inputs:
+      - type: logfile
+        title: Collect sample logs from instances
+        description: Collecting sample logs
+owner:
+  github: elastic/integrations
+  type: elastic
