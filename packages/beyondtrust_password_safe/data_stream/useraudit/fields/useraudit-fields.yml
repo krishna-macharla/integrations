@@ -1,0 +1,52 @@
+# Define the fields for the response from the POST request
+- name: SetCookie
+  type: keyword
+  description: "The Set-Cookie header returned from the POST request."
+- name: ResponseData
+  type: group
+  description: "Group containing the data from the POST response."
+  fields:
+    - name: UserId
+      type: long
+      description: "Unique identifier of the user."
+    - name: SID
+      type: keyword
+      description: "Session ID associated with the user, can be null."
+    - name: EmailAddress
+      type: keyword
+      description: "Email address of the user."
+    - name: UserName
+      type: keyword
+      description: "User's login name or email address."
+    - name: Name
+      type: keyword
+      description: "Full name of the user."
+# Define the fields for the response from the GET request
+- name: GetResponseData
+  type: group
+  description: "Group containing the data from the GET response after using the Set-Cookie header."
+  fields:
+    - name: Data
+      type: group
+      description: "Array of data returned from the GET request."
+      fields:
+        - name: UserId
+          type: long
+          description: "User ID from the GET response."
+        - name: UserName
+          type: keyword
+          description: "User's name or identifier from the GET response."
+        - name: EmailAddress
+          type: keyword
+          description: "User's email from the GET response."
+    - name: Cursor
+      type: keyword
+      description: "Cursor value to be used for pagination in the GET request."
+# Additional fields for pagination or other response-related data
+- name: Cursor
+  type: keyword
+  description: "Cursor used for pagination in both POST and GET requests."
+# Optional field for errors or status messages in the response
+- name: Error
+  type: keyword
+  description: "Error message if the response contains an error."

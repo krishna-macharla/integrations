@@ -24,13 +24,57 @@ icons:
     size: 32x32
     type: image/svg+xml
 policy_templates:
-  - name: sample
-    title: Sample logs
-    description: Collect sample logs
+  - name: BeyondTrust
+    title: BeyondTrust Events
+    description: Collect events from BeyondTrust Events Reporting
     inputs:
-      - type: logfile
-        title: Collect sample logs from instances
-        description: Collecting sample logs
+      - type: httpjson
+        title: Collect events from BeyondTrust Events API
+        description: Collect sign-in attempt, item usages, and audit events from BeyondTrust via the BeyondTrust Events API
+        vars:
+          - name: url
+            type: text
+            title: URL of BeyondTrust Events API Server
+            description: |
+              options: https://xxxxxxxxxxxx.com/BeyondTrust/api/public/v3. path is automatic
+            show_user: true
+            required: true
+          - name: enable_request_tracer
+            type: bool
+            title: Enable request tracing
+            multi: false
+            required: false
+            show_user: false
+            description: The request tracer logs requests and responses to the agent's local filesystem for debugging configurations. Enabling this request tracing compromises security and should only be used for debugging. See [documentation](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-httpjson.html#_request_tracer_filename) for details.
+          - name: token
+            type: password
+            title: BeyondTrust Authorization API Key
+            description: |
+              APIKey Token, e.g. "eyJhbGciO..."
+            show_user: true
+            required: true
+            secret: true
+          - name: http_client_timeout
+            type: text
+            title: HTTP Client Timeout
+            description: Duration before declaring that the HTTP client connection has timed out. Valid time units are ns, us, ms, s, m, h.
+            multi: false
+            required: false
+            show_user: true
+          - name: proxy_url
+            type: text
+            title: Proxy URL
+            description: URL to proxy connections in the form of http\[s\]://<user>:<password>@<server name/ip>:<port>
+            multi: false
+            required: false
+            show_user: false
+          - name: ssl
+            type: yaml
+            title: SSL Configuration
+            description: i.e. certificate_authorities, supported_protocols, verification_mode etc.
+            multi: false
+            required: false
+            show_user: false
 owner:
   github: elastic/integrations
   type: elastic

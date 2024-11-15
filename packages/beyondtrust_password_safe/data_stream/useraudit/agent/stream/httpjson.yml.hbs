@@ -1,0 +1,45 @@
+config_version: 2
+interval: {{interval}}
+{{#if ssl}}
+request.ssl: {{ssl}}
+{{/if}}
+
+{{#if enable_request_tracer}}
+request.tracer.filename: "../../logs/httpjson/http-request-trace-*.ndjson"
+request.tracer.maxbackups: 5
+{{/if}}
+
+request.url: {{url}}/Auth/SignAppin
+request.method: POST
+request.keep_alive.disable: {{disable_keep_alive}}
+
+request.transforms:
+  - set:
+      target: "header.Content-Type"
+      value: "application/json"
+  - set:
+      target: "header.Authorization"
+      value: '{{token}}'
+
+response.decode_as: application/json
+response.split:
+  target: body.response
+  ignore_empty_value: true
+
+tags:
+  {{#if preserve_original_event}}
+  - preserve_original_event
+  {{/if}}
+  {{#if preserve_duplicate_custom_fields}}
+  - preserve_duplicate_custom_fields
+  {{/if}}
+  {{#each tags as |tag|}}
+  - {{tag}}
+  {{/each}} 
+  {{#contains "forwarded" tags}}
+  - publisher_pipeline.disable_host: true  # This line may need quoting
+  {{/contains}}
+  
+{{#if processors}}
+processors: {{processors}}  # Ensure processors are properly formatted
+{{/if}}

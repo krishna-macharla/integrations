@@ -1,0 +1,30 @@
+---
+description: Pipeline for processing sample logs
+processors:
+  - rename:
+      field: user.id
+      target_field: UserID
+      ignore_missing: true
+  - rename:
+      field: user.username
+      target_field: UserName
+      ignore_missing: true
+  - rename:
+      field: audit.action_type
+      target_field: ActionType
+      ignore_missing: true
+  - rename:
+      field: audit.section
+      target_field: Section
+      ignore_missing: true 
+  - rename:
+      field: audit.ip_address
+      target_field: IPAddress
+      ignore_missing: true 
+  - rename:
+      field: audit.timestamp
+      target_field: CreateDate
+      ignore_missing: true                    
+  - append:
+      field: error.message
+      value: '{{{ _ingest.on_failure_message }}}'
