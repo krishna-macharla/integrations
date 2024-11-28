@@ -1,11 +1,11 @@
 title: "BeyondTrust Sign-In Attempt Events"
 type: logs
 streams:
-  - input: httpjson
+  - input: cel
     title: "Collect BeyondTrust Sign-In Attempt Events"
     description: "Collect sign-in attempts from BeyondTrust via the BeyondTrust Events API"
     enabled: true
-    template_path: httpjson.yml.hbs
+    template_path: cel.yml.hbs
     vars:
       - name: interval
         type: text

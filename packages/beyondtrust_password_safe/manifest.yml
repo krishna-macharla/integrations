@@ -1,7 +1,7 @@
 format_version: 3.3.0
 name: beyondtrust_password_safe
 title: "BeyondInsight and Password Safe"
-version: 0.0.1
+version: 0.0.2
 source:
   license: "Elastic-2.0"
 description: "It enables real-time monitoring of privileged account access, session recordings, and password checkout patterns to help security teams maintain compliance and quickly identify potential privilege abuse."
@@ -28,7 +28,7 @@ policy_templates:
     title: BeyondTrust Events
     description: Collect events from BeyondTrust Events Reporting
     inputs:
-      - type: httpjson
+      - type: cel
         title: Collect events from BeyondTrust Events API
         description: Collect sign-in attempt, item usages, and audit events from BeyondTrust via the BeyondTrust Events API
         vars:
@@ -39,6 +39,27 @@ policy_templates:
               options: https://xxxxxxxxxxxx.com/BeyondTrust/api/public/v3. path is automatic
             show_user: true
             required: true
+          - name: apikeytoken
+            type: text
+            title: API Key token of BeyondTrust Events API Server
+            description: "options: PS-Auth key=********************."
+            show_user: true
+            required: true
+            secret: true
+          # - name: username
+          #   type: text
+          #   title: UserID of BeyondTrust Events API Server
+          #   description: "options: runas=*********."
+          #   show_user: true
+          #   required: true
+          # - name: password
+          #   type: password
+          #   title: User Password of BeyondTrust Events API Server
+          #   description: |
+          #     options: pwd=[*********].
+          #   show_user: true
+          #   required: true
+          #   secret: true
           - name: enable_request_tracer
             type: bool
             title: Enable request tracing
@@ -46,14 +67,6 @@ policy_templates:
             required: false
             show_user: false
             description: The request tracer logs requests and responses to the agent's local filesystem for debugging configurations. Enabling this request tracing compromises security and should only be used for debugging. See [documentation](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-httpjson.html#_request_tracer_filename) for details.
-          - name: token
-            type: password
-            title: BeyondTrust Authorization API Key
-            description: |
-              APIKey Token, e.g. "eyJhbGciO..."
-            show_user: true
-            required: true
-            secret: true
           - name: http_client_timeout
             type: text
             title: HTTP Client Timeout

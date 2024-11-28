@@ -1,8 +1,5 @@
 # Define the fields for the response from the POST request
-- name: SetCookie
-  type: keyword
-  description: "The Set-Cookie header returned from the POST request."
-- name: ResponseData
+- name: Data
   type: group
   description: "Group containing the data from the POST response."
   fields:
