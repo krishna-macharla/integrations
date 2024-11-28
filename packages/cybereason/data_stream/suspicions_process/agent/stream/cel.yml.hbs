@@ -25,11 +25,9 @@ redact:
     - password
 program: |
   post_request(
-    state.url.trim_right("/")).with({
-          "Header":{
-            "Authorization": [state.]
-          }
-        }h
+    state.url.trim_right("/") + "/login.html",
+    "application/x-www-form-urlencoded",
+    {"username":[state.username],"password":[state.password]}.format_query()
   ).do_request().as(resp, resp.Request.URL.contains("error") ? "" : // When the base request redirects to a new request,
     resp.Request.Response.Request.Response.Header["Set-Cookie"].filter(e, e.contains("JSESSIONID")).as(sess, sess.size() > 0 ? // we obtain the request object for the initial request's response.
       sess[0].split(";").as(sub, sub.filter(e, e.contains("JSESSIONID")).size() > 0 ? // To retrieve the appropriate header based on the redirect,

@@ -56,7 +56,7 @@ program: |
           "events": !has(body.malops) ? [{}] :
             body.malops.map(e, {
               "message": e.encode_json(),
-            }), 
+            }),
           "cursor": {
             "last_update_timestamp": (
               has(body.malops) && body.malops.size() > 0 ?
