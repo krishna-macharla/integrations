@@ -1,7 +1,7 @@
 format_version: 3.3.0
 name: beyondtrust_password_safe
 title: "BeyondInsight and Password Safe"
-version: 0.0.2
+version: 0.0.14
 source:
   license: "Elastic-2.0"
 description: "It enables real-time monitoring of privileged account access, session recordings, and password checkout patterns to help security teams maintain compliance and quickly identify potential privilege abuse."
@@ -46,6 +46,13 @@ policy_templates:
             show_user: true
             required: true
             secret: true
+          - name: test_url
+            type: text
+            title: TEST url for testing GET Requests API
+            description: |
+              options: https://xxxxxxxxxxxx.com/BeyondTrust/api/public/v3. path is automatic
+            show_user: true
+            required: true
           # - name: username
           #   type: text
           #   title: UserID of BeyondTrust Events API Server
