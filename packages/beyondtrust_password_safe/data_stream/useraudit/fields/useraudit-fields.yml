@@ -1,4 +1,5 @@
 # Define the fields for the response from the POST request
+
 - name: Data
   type: group
   description: "Group containing the data from the POST response."
@@ -18,8 +19,9 @@
     - name: Name
       type: keyword
       description: "Full name of the user."
-# Define the fields for the response from the GET request
 - name: GetResponseData
+  # Define the fields for the response from the GET request
+
   type: group
   description: "Group containing the data from the GET response after using the Set-Cookie header."
   fields:
@@ -39,11 +41,13 @@
     - name: Cursor
       type: keyword
       description: "Cursor value to be used for pagination in the GET request."
-# Additional fields for pagination or other response-related data
 - name: Cursor
+  # Additional fields for pagination or other response-related data
+
   type: keyword
   description: "Cursor used for pagination in both POST and GET requests."
-# Optional field for errors or status messages in the response
 - name: Error
+  # Optional field for errors or status messages in the response
+
   type: keyword
   description: "Error message if the response contains an error."

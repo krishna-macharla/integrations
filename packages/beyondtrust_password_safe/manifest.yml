@@ -46,21 +46,34 @@ policy_templates:
             show_user: true
             required: true
             secret: true
-          # - name: username
           #   type: text
+
           #   title: UserID of BeyondTrust Events API Server
+
           #   description: "options: runas=*********."
+
           #   show_user: true
+
           #   required: true
+
           # - name: password
+
           #   type: password
+
           #   title: User Password of BeyondTrust Events API Server
+
           #   description: |
+
           #     options: pwd=[*********].
+
           #   show_user: true
+
           #   required: true
+
           #   secret: true
           - name: enable_request_tracer
+            # - name: username
+
             type: bool
             title: Enable request tracing
             multi: false
