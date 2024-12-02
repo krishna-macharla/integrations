@@ -20,6 +20,8 @@ state:
   {{!-- apikey: PS-Auth key={{apikeytoken}};runas={{username}};pwd={{password}} --}}
   apikey: {{apikeytoken}}
   want_more: false
+  offset: 0
+  limit: {{limit}}
 program: |
   state.with(
   state.?want_more.orValue(false) ? {"message": "no action required"} : 
@@ -66,8 +68,10 @@ program: |
      :
      state.?want_more.orValue(false) ? {"message": "no action required"} : 
      get_request(
-      state.url + "/UserAudits"
-      ).with({
+      state.url + "/UserAudits?" + {
+        "offset": [string(state.offset)],
+        "limit": [string(state.limit)],
+      }.format_query()).with({
       "Header": {
         "Cookie": [cookie],
         "Content-Type": ["application/json"],
@@ -96,6 +100,8 @@ program: |
   						?"event.original": state.?preserve_original_event.orValue(false) ? optional.of(e.encode_json()) : optional.none(),
   					}
   				),
+          "want_more": size(body.Data)>55? true: false,
+          "offset": int(state.offset) + 100,
       }
       )
     )
