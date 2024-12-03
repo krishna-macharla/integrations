@@ -21,13 +21,6 @@ streams:
         show_user: true
         required: true
         default: 100
-      - name: offset
-        type: integer
-        title: Offset
-        description: Number of events to skipped per request
-        show_user: true
-        required: true
-        default: 0
       - name: tags
         type: text
         title: Tags
