@@ -27,7 +27,7 @@ redact:
   fields:
     - apikey 
 program: |-
-  // Check auth_cookie is presnt or not if not then call the /Auth/SignAppIn API if present the call /UserAudits API
+  // Check if the auth_cookie is present or not; if not, then call the /Auth/SignAppIn API; if present, call the /UserAudits API.
   (!has(state.cursor) || has(state.cursor) && has(state.cursor.auth_cookie) && state.cursor.auth_cookie == null) ?
   	(
   		// Authenticating using API to retrieve auth Cookie
@@ -116,7 +116,7 @@ program: |-
   		)
   	)
   :
-  	// auth_cookie is present so submit get UserAudits query to get audit event logs
+  	// If the auth_cookie is present, submit the get UserAudits query to get audit event logs.
   	request(
   		"GET",
   		state.url + "/UserAudits" + "?" + {
