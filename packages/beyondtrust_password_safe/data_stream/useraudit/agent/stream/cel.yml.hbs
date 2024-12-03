@@ -66,8 +66,8 @@ program: |-
   			request(
   				"GET",
   				state.url + "/UserAudits" + "?" + {
-  					"limit": [string(state.limit)],
-  					"offset": [string(state.offset)],
+  					"limit": [string(state.cursor.limit)],
+  					"offset": [string(state.cursor.offset)],
   				}.format_query()
   			).with(
   				{
@@ -82,11 +82,14 @@ program: |-
   						state.with(
   							{
   								"events": body.Data.map(e, {"message": e.encode_json()}),
-  								"want_more": true,
+  								"want_more": (int(state.cursor.offset) > int(body.TotalCount)) ?
+  									false
+  								:
+  									true,
   								"cursor": {
   									"auth_cookie": auth_cookie,
-  									"limit": int(state.limit),
-  									"offset": int(state.offset) + int(state.limit),
+  									"limit": int(state.cursor.limit),
+  									"offset": int(state.?cursor.offset.orValue(0)) + int(state.cursor.limit),
   								},
   							}
   						)
@@ -132,12 +135,21 @@ program: |-
   			bytes(resp.Body).decode_json().as(body,
   				state.with(
   					{
-  						"events": body.Data.map(e, {"message": e.encode_json()}),
-  						"want_more": true,
+  						"events": body.Data.map(e,
+  							{
+  								"message": e.encode_json(),
+  								"limit": int(state.limit),
+  								"offset": int(state.offset) + int(state.limit),
+  							}
+  						),
+  						"want_more": (int(state.cursor.offset) > int(body.TotalCount)) ?
+  							false
+  						:
+  							true,
   						"cursor": {
   							"auth_cookie": state.cursor.auth_cookie,
   							"limit": int(state.limit),
-  							"offset": int(state.offset) + int(state.limit),
+  							"offset": int(state.?cursor.offset.orValue(0)) + int(state.cursor.limit),
   						},
   					}
   				)

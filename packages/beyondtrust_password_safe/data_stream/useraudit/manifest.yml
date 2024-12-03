@@ -27,7 +27,7 @@ streams:
         description: Number of events to skipped per request
         show_user: true
         required: true
-        default: 100
+        default: 0
       - name: tags
         type: text
         title: Tags
