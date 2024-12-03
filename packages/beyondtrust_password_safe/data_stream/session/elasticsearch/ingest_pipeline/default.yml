@@ -1,10 +1,51 @@
 ---
 description: Pipeline for processing sample logs
 processors:
-- set:
-    field: sample_field
-    value: "1"
+
+- json:
+      field: "message"
+      target_field: "parsed_message"
+      add_to_root: false
+
+- fingerprint:
+    fields:
+      - parsed_message.SessionID
+    target_field: "_id"
+
+- rename:
+    field: "parsed_message.SessionID"
+    target_field: "event.id"
+    ignore_missing: true
+- rename:
+    field: "parsed_message.UserID"
+    target_field: "user.id"
+    ignore_missing: true
+- rename:
+    field: "parsed_message.NodeID"
+    target_field: "host.node_id"
+    ignore_missing: true
+
+- date:
+    field: "parsed_message.StartTime"
+    target_field: "event.start"
+    formats: ["ISO8601"]
+    ignore_failure: true
+- date:
+    field: "parsed_message.EndTime"
+    target_field: "event.end"
+    formats: ["ISO8601"]
+    ignore_failure: true
+- convert:
+    field: "parsed_message.Duration"
+    type: "long"
+    target_field: "event.duration"
+    ignore_missing: true
+
+- remove:
+    field: ["RecordKey", "Token", "ManagedSystemID", "ManagedAccountID", "Protocol", "ArchiveStatus"]
+    ignore_missing: true
+
 on_failure:
 - set:
-    field: error.message
-    value: '{{ _ingest.on_failure_message }}'
+    field: "error.message"
+    value: "{{ _ingest.on_failure_message }}"
