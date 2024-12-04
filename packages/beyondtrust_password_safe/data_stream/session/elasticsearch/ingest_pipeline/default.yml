@@ -10,18 +10,9 @@ processors:
         - beyond_insight_password_safe.session.SessionID
       target_field: "_id"
 
-  - set:
-      field: ecs.version
-      value: '8.11.0'
-
-  - set:
-      field: event.kind
-      value: event
-
-  - append:
-      field: event.category
-      value: session
-
+####################
+# Scripts for processing input #
+####################
   - script:
       description: Drops null/empty values recursively.
       lang: painless
@@ -75,15 +66,24 @@ processors:
         }
 
 
+####################
+# ECS Fields #
+####################
+  - set:
+      field: ecs.version
+      value: '8.11.0'
+
+  - set:
+      field: event.kind
+      value: event
+
   - append:
-      field: event.type
-      value: start
-      if: "ctx.beyond_insight_password_safe.session?.start_time != null"
+      field: event.category
+      value: session
 
   - append:
       field: event.type
-      value: end
-      if: "ctx.beyond_insight_password_safe.session?.start_time != null"
+      value: info
 
   - rename:
       field: beyond_insight_password_safe.session.session_id
@@ -94,76 +94,6 @@ processors:
       field: beyond_insight_password_safe.session.user_id
       target_field: user.id
       ignore_missing: true
-
-  - rename:
-      field:  beyond_insight_password_safe.session.node_id
-      target_field: host.node_id
-      ignore_missing: true
-
-  - script:
-      description: Convert status to their text meaning
-      lang: painless
-      source: |
-        if (ctx.beyond_insight_password_safe?.session?.status != null) {
-          int status = ctx.beyond_insight_password_safe.session.status;
-          if (status == 0) {
-            ctx.event.action = "not_started";
-          } else if (status == 1) {
-            ctx.event.action = "in_progress";
-          } else if (status == 2) {
-            ctx.event.action = "completed";
-          } else if (status == 5) {
-            ctx.event.action = "locked";
-          } else if (status == 7) {
-            ctx.event.action = "terminated";
-          } else if (status == 8) {
-            ctx.event.action = "logged_off";
-          } else if (status == 9) {
-            ctx.event.action = "disconnected";
-          } else {
-            ctx.event.action = "unknown";
-          }
-        }
-
-  - script:
-      description: Convert archive_status to text values
-      lang: "painless"
-      source: |
-        if (ctx.beyond_insight_password_safe.session?.archive_status != null) {
-          int archive_status = ctx.beyond_insight_password_safe.session.archive_status;
-          if (archive_status == 0) {
-            ctx.event.archive_status = "not_archived";
-          } else if (archive_status == 1) {
-            ctx.event.archive_status = "archived";
-          } else if (archive_status == 2) {
-            ctx.event.archive_status = "restoring";
-          } else if (archive_status == 3) {
-            ctx.event.archive_status = "archiving";
-          } else if (archive_status == 4) {
-            ctx.event.archive_status = "session_not_found";
-          } else if (archive_status == 5) {
-            ctx.event.archive_status = "repository_offline";
-          } else if (archive_status == 6) {
-            ctx.event.archive_status = "unknown_archive_status";
-          } else {
-            ctx.event.archive_status = "undefined_archive_status";
-          }
-        }
-
-  - script:
-      description: Convert protocol to text values
-      lang: "painless"
-      source: |
-        if (ctx.beyond_insight_password_safe.session?.protocol != null) {
-          int protocol = ctx.beyond_insight_password_safe.session.protocol;
-          if (protocol == 0) {
-            ctx.event.protocol = "rdp";
-          } else if (protocol == 1) {
-            ctx.event.protocol = "ssh";
-          } else {
-            ctx.network.protocol = "unknown_protocol";
-          }
-        }
 
   - date:
       if: "ctx.beyond_insight_password_safe.session?.start_time != null"
@@ -180,41 +110,81 @@ processors:
       ignore_failure: true
 
   - rename:
-      field: beyond_insight_password_safe.session.duration"
+      field: beyond_insight_password_safe.session.duration
       target_field: event.duration
       ignore_missing: true
 
-  - set:
-      field: custom.managed_system.asset_name
-      value: "{{beyond_insight_password_safe.session.asset_name}}"
-      if: "ctx.beyond_insight_password_safe.session?.asset_name != null"
+####################
+# Session Specific Fields #
+####################
+  - script:
+      description: Convert status to their text meaning
+      lang: painless
+      source: |
+        if (ctx.beyond_insight_password_safe?.session?.status != null) {
+          int status = ctx.beyond_insight_password_safe.session.status;
+          if (status == 0) {
+            ctx.beyond_insight_password_safe.session.status = "not_started";
+          } else if (status == 1) {
+            ctx.beyond_insight_password_safe.session.status = "in_progress";
+          } else if (status == 2) {
+            ctx.beyond_insight_password_safe.session.status = "completed";
+          } else if (status == 5) {
+            ctx.beyond_insight_password_safe.session.status = "locked";
+          } else if (status == 7) {
+            ctx.beyond_insight_password_safe.session.status = "terminated";
+          } else if (status == 8) {
+            ctx.beyond_insight_password_safe.session.status = "logged_off";
+          } else if (status == 9) {
+            ctx.beyond_insight_password_safe.session.status = "disconnected";
+          } else {
+            ctx.beyond_insight_password_safe.session.status = "unknown";
+          }
+        }
 
-  - set:
-      field: custom.managed_system.id
-      value: "{{beyond_insight_password_safe.session.managed_system_id}}"
-      if: "ctx.beyond_insight_password_safe.session?.managed_system_id != null"
+  - script:
+      description: Convert archive_status to text values
+      lang: "painless"
+      source: |
+        if (ctx.beyond_insight_password_safe.session?.archive_status != null) {
+          int archive_status = ctx.beyond_insight_password_safe.session.archive_status;
+          if (archive_status == 0) {
+            ctx.beyond_insight_password_safe.session.archive_status = "not_archived";
+          } else if (archive_status == 1) {
+            ctx.beyond_insight_password_safe.session.archive_status = "archived";
+          } else if (archive_status == 2) {
+            ctx.beyond_insight_password_safe.session.archive_status = "restoring";
+          } else if (archive_status == 3) {
+            ctx.beyond_insight_password_safe.session.archive_status = "archiving";
+          } else if (archive_status == 4) {
+            ctx.beyond_insight_password_safe.session.archive_status = "session_not_found";
+          } else if (archive_status == 5) {
+            ctx.beyond_insight_password_safe.session.archive_status = "repository_offline";
+          } else if (archive_status == 6) {
+            ctx.beyond_insight_password_safe.session.archive_status = "unknown_archive_status";
+          } else {
+            ctx.beyond_insight_password_safe.session.archive_status = "undefined_archive_status";
+          }
+        }
 
-  - set:
-      field: custom.managed_account.id
-      value: "{{beyond_insight_password_safe.session.managed_account_id}}"
-      if: "ctx.parsed_message?.managed_account_id != null"
-
-  - set:
-      field: custom.managed_account.name
-      value: "{{beyond_insight_password_safe.session.managed_account_name}}"
-      if: "ctx.parsed_message?.managed_account_name != null"
-
-  - set:
-      field: custom.record_key
-      value: "{{beyond_insight_password_safe.session.record_key}}"
-      if: "ctx.parsed_message?.record_key != null"
+  - script:
+      description: Convert protocol to text values
+      lang: "painless"
+      source: |
+        if (ctx.beyond_insight_password_safe.session?.protocol != null) {
+          int protocol = ctx.beyond_insight_password_safe.session.protocol;
+          if (protocol == 0) {
+            ctx.beyond_insight_password_safe.session.protocol = "rdp";
+          } else if (protocol == 1) {
+            ctx.beyond_insight_password_safe.session.protocol = "ssh";
+          } else {
+            ctx.beyond_insight_password_safe.session.protocol = "unknown_protocol";
+          }
+        }
 
   - remove:
       field:
-        - beyond_insight_password_safe
-        - message
-      ignore_missing: true
-
+        - beyond_insight_password_safe.session.token
 
 on_failure:
   - append:
