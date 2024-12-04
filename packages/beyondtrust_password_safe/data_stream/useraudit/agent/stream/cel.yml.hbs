@@ -1,4 +1,3 @@
-config_version: 2
 interval: {{interval}}
 {{#if enable_request_tracer}}
 resource.tracer.filename: "../../logs/cel/http-request-trace-*.ndjson"
@@ -63,7 +62,12 @@ program: |-
   		bytes(resp.Body).decode_json().as(body,
   			state.with(
   				{
-  					"events": body.Data.map(e, {"message": e.encode_json()}),
+  					"events": body.Data.map(e,
+  						{
+  							"message": e,
+  							?"event.original": state.?preserve_original_event.orValue(false) ? optional.of(e.encode_json()) : optional.none(),
+  						}
+  					),
   					"want_more": ((has(state.?cursor.offset) ? int(state.cursor.offset) : int(0)) != body.TotalCount) ? true : false,
   					"cursor": {
   						"auth_cookie": auth_cookie,
@@ -74,3 +78,17 @@ program: |-
   		)
   	)
   )
+tags:
+{{#if preserve_original_event}}
+  - preserve_original_event
+{{/if}}
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{#contains "forwarded" tags}}
+publisher_pipeline.disable_host: true
+{{/contains}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}
