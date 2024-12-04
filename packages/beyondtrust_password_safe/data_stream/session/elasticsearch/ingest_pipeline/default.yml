@@ -1,51 +1,202 @@
 ---
 description: Pipeline for processing sample logs
 processors:
+  - rename:
+      field: message
+      target_field: beyond_insight_password_safe.session
 
-- json:
-      field: "message"
-      target_field: "parsed_message"
-      add_to_root: false
+  - fingerprint:
+      fields:
+        - beyond_insight_password_safe.session.SessionID
+      target_field: "_id"
 
-- fingerprint:
-    fields:
-      - parsed_message.SessionID
-    target_field: "_id"
+  - script:
+      description: Drops null/empty values recursively.
+      lang: painless
+      source: |
+        boolean dropEmptyFields(Object object) {
+          if (object == null || object == "") {
+            return true;
+          } else if (object instanceof Map) {
+            ((Map) object).values().removeIf(value -> dropEmptyFields(value));
+            return (((Map) object).size() == 0);
+          } else if (object instanceof List) {
+            ((List) object).removeIf(value -> dropEmptyFields(value));
+            return (((List) object).length == 0);
+          }
+          return false;
+        }
+        dropEmptyFields(ctx);
 
-- rename:
-    field: "parsed_message.SessionID"
-    target_field: "event.id"
-    ignore_missing: true
-- rename:
-    field: "parsed_message.UserID"
-    target_field: "user.id"
-    ignore_missing: true
-- rename:
-    field: "parsed_message.NodeID"
-    target_field: "host.node_id"
-    ignore_missing: true
+  - script:
+      description: Convert Additional Info keys to snake case.
+      tag: additional-info-keys-to-snake-case
+      lang: painless
+      source: |
+        Map keysToSnakeCase(Map m) {
+          def regex = /_?([a-z])([A-Z]+)/;
+          def snakeCaseMap = [:];
 
-- date:
-    field: "parsed_message.StartTime"
-    target_field: "event.start"
-    formats: ["ISO8601"]
-    ignore_failure: true
-- date:
-    field: "parsed_message.EndTime"
-    target_field: "event.end"
-    formats: ["ISO8601"]
-    ignore_failure: true
-- convert:
-    field: "parsed_message.Duration"
-    type: "long"
-    target_field: "event.duration"
-    ignore_missing: true
+          for (entry in m.entrySet()) {
+            def k = entry.getKey();
+            def v = entry.getValue();
 
-- remove:
-    field: ["RecordKey", "Token", "ManagedSystemID", "ManagedAccountID", "Protocol", "ArchiveStatus"]
-    ignore_missing: true
+            if (v instanceof Map) {
+              v = keysToSnakeCase(v);
+            } else if (v instanceof List) {
+              for (int i = 0; i < v.size(); i++) {
+                def item = v.get(i);
+                if (item instanceof Map) {
+                  v.set(i, keysToSnakeCase(item));
+                }
+              }
+            }
+
+            k = regex.matcher(k).replaceAll('$1_$2').toLowerCase();
+            snakeCaseMap.put(k, v);
+          }
+          return snakeCaseMap;
+        }
+
+        if (ctx.beyond_insight_password_safe.session != null) {
+          ctx.beyond_insight_password_safe.session = keysToSnakeCase(ctx.beyond_insight_password_safe.session);
+        }
+
+  - rename:
+      field: beyond_insight_password_safe.session.session_id
+      target_field: event.id
+      ignore_missing: true
+
+  - rename:
+      field: beyond_insight_password_safe.session.user_id
+      target_field: user.id
+      ignore_missing: true
+
+  - rename:
+      field:  beyond_insight_password_safe.session.node_id
+      target_field: host.node_id
+      ignore_missing: true
+
+  - script:
+      description: Convert status to their text meaning
+      lang: painless
+      source: |
+        if (ctx.beyond_insight_password_safe?.session?.status != null) {
+          int status = ctx.beyond_insight_password_safe.session.status;
+          if (status == 0) {
+            ctx.event.action = "not_started";
+          } else if (status == 1) {
+            ctx.event.action = "in_progress";
+          } else if (status == 2) {
+            ctx.event.action = "completed";
+          } else if (status == 5) {
+            ctx.event.action = "locked";
+          } else if (status == 7) {
+            ctx.event.action = "terminated";
+          } else if (status == 8) {
+            ctx.event.action = "logged_off";
+          } else if (status == 9) {
+            ctx.event.action = "disconnected";
+          } else {
+            ctx.event.action = "unknown";
+          }
+        }
+
+  - script:
+      description: Convert archive_status to text values
+      lang: "painless"
+      source: |
+        if (ctx.beyond_insight_password_safe.session?.archive_status != null) {
+          int archive_status = ctx.beyond_insight_password_safe.session.archive_status;
+          if (archive_status == 0) {
+            ctx.event.category = "not_archived";
+          } else if (archive_status == 1) {
+            ctx.event.category = "archived";
+          } else if (archive_status == 2) {
+            ctx.event.category = "restoring";
+          } else if (archive_status == 3) {
+            ctx.event.category = "archiving";
+          } else if (archive_status == 4) {
+            ctx.event.category = "session_not_found";
+          } else if (archive_status == 5) {
+            ctx.event.category = "repository_offline";
+          } else if (archive_status == 6) {
+            ctx.event.category = "unknown_archive_status";
+          } else {
+            ctx.event.category = "undefined_archive_status";
+          }
+        }
+
+  - script:
+      description: Convert protocol to text values
+      lang: "painless"
+      source: |
+        if (ctx.beyond_insight_password_safe.session?.protocol != null) {
+          int protocol = ctx.beyond_insight_password_safe.session.protocol;
+          if (protocol == 0) {
+            ctx.event.protocol = "rdp";
+          } else if (protocol == 1) {
+            ctx.event.protocol = "ssh";
+          } else {
+            ctx.network.protocol = "unknown_protocol";
+          }
+        }
+
+  - date:
+      if: "ctx.beyond_insight_password_safe.session?.start_time != null"
+      field: ctx.beyond_insight_password_safe.session.start_time"
+      target_field: event.start
+      formats: ["ISO8601"]
+      ignore_failure: true
+
+  - date:
+      if: "ctx.beyond_insight_password_safe.session?.end_time != null"
+      field: ctx.beyond_insight_password_safe.session.end_time
+      target_field: event.end
+      formats: ["ISO8601"]
+      ignore_failure: true
+
+  - rename:
+      field: beyond_insight_password_safe.session.duration"
+      target_field: event.duration
+      ignore_missing: true
+
+  - set:
+      field: custom.managed_system.asset_name
+      value: "{{beyond_insight_password_safe.session.asset_name}}"
+      if: "ctx.beyond_insight_password_safe.session?.asset_name != null"
+
+  - set:
+      field: custom.managed_system.id
+      value: "{{beyond_insight_password_safe.session.managed_system_id}}"
+      if: "ctx.beyond_insight_password_safe.session?.managed_system_id != null"
+
+  - set:
+      field: custom.managed_account.id
+      value: "{{beyond_insight_password_safe.session.managed_account_id}}"
+      if: "ctx.parsed_message?.managed_account_id != null"
+
+  - set:
+      field: custom.managed_account.name
+      value: "{{beyond_insight_password_safe.session.managed_account_name}}"
+      if: "ctx.parsed_message?.managed_account_name != null"
+
+  - set:
+      field: custom.record_key
+      value: "{{beyond_insight_password_safe.session.record_key}}"
+      if: "ctx.parsed_message?.record_key != null"
+
+  - remove:
+      field:
+        - beyond_insight_password_safe
+        - message
+      ignore_missing: true
+
 
 on_failure:
-- set:
-    field: "error.message"
-    value: "{{ _ingest.on_failure_message }}"
+  - append:
+      field: error.message
+      value: '{{{_ingest.on_failure_message}}}'
+  - set:
+      field: event.kind
+      value: pipeline_error

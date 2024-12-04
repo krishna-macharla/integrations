@@ -64,7 +64,6 @@ program: |
         "want_more": false,
       }
      :
-     state.?want_more.orValue(false) ? {"message": "no action required"} : 
      get_request(
       state.url + "/Sessions"
       ).with({
@@ -92,7 +91,7 @@ program: |
        bytes(resp.Body).decode_json().as(body,{
         "events": body.map(e,
   					{
-  						"message": e.encode_json(),
+  						"message": e,
   						?"event.original": state.?preserve_original_event.orValue(false) ? optional.of(e.encode_json()) : optional.none(),
   					}
   				),
