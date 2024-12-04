@@ -85,6 +85,14 @@ processors:
       field: event.type
       value: info
 
+  - set:
+      field: event.dataset
+      value: beyond_insight_password_safe.session
+
+  - set:
+      field: event.module
+      value: beyond_insight_password_safe
+
   - rename:
       field: beyond_insight_password_safe.session.session_id
       target_field: event.id
