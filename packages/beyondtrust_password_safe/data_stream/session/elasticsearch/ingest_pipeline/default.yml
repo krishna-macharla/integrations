@@ -10,6 +10,18 @@ processors:
         - beyond_insight_password_safe.session.SessionID
       target_field: "_id"
 
+  - set:
+      field: ecs.version
+      value: '8.11.0'
+
+  - set:
+      field: event.kind
+      value: event
+
+  - append:
+      field: event.category
+      value: session
+
   - script:
       description: Drops null/empty values recursively.
       lang: painless
@@ -62,6 +74,17 @@ processors:
           ctx.beyond_insight_password_safe.session = keysToSnakeCase(ctx.beyond_insight_password_safe.session);
         }
 
+
+  - append:
+      field: event.type
+      value: start
+      if: "ctx.beyond_insight_password_safe.session?.start_time != null"
+
+  - append:
+      field: event.type
+      value: end
+      if: "ctx.beyond_insight_password_safe.session?.start_time != null"
+
   - rename:
       field: beyond_insight_password_safe.session.session_id
       target_field: event.id
@@ -109,21 +132,21 @@ processors:
         if (ctx.beyond_insight_password_safe.session?.archive_status != null) {
           int archive_status = ctx.beyond_insight_password_safe.session.archive_status;
           if (archive_status == 0) {
-            ctx.event.category = "not_archived";
+            ctx.event.archive_status = "not_archived";
           } else if (archive_status == 1) {
-            ctx.event.category = "archived";
+            ctx.event.archive_status = "archived";
           } else if (archive_status == 2) {
-            ctx.event.category = "restoring";
+            ctx.event.archive_status = "restoring";
           } else if (archive_status == 3) {
-            ctx.event.category = "archiving";
+            ctx.event.archive_status = "archiving";
           } else if (archive_status == 4) {
-            ctx.event.category = "session_not_found";
+            ctx.event.archive_status = "session_not_found";
           } else if (archive_status == 5) {
-            ctx.event.category = "repository_offline";
+            ctx.event.archive_status = "repository_offline";
           } else if (archive_status == 6) {
-            ctx.event.category = "unknown_archive_status";
+            ctx.event.archive_status = "unknown_archive_status";
           } else {
-            ctx.event.category = "undefined_archive_status";
+            ctx.event.archive_status = "undefined_archive_status";
           }
         }
 
