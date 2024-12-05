@@ -93,15 +93,15 @@ processors:
       field: event.module
       value: beyond_insight_password_safe
 
-  - rename:
-      field: beyond_insight_password_safe.session.session_id
-      target_field: event.id
-      ignore_missing: true
+  - set:
+      field: event.id
+      copy_from: beyond_insight_password_safe.session.session_id
+      ignore_empty_value: true
 
-  - rename:
-      field: beyond_insight_password_safe.session.user_id
-      target_field: user.id
-      ignore_missing: true
+  - set:
+      field: event.duration
+      copy_from: beyond_insight_password_safe.session.duration
+      ignore_empty_value: true
 
   - date:
       if: "ctx.beyond_insight_password_safe.session?.start_time != null"
@@ -117,10 +117,6 @@ processors:
       formats: ["ISO8601"]
       ignore_failure: true
 
-  - rename:
-      field: beyond_insight_password_safe.session.duration
-      target_field: event.duration
-      ignore_missing: true
 
 ####################
 # Session Specific Fields #
