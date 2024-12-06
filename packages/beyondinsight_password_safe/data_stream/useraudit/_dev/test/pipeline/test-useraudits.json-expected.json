@@ -1,0 +1,37 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2024-12-06T17:59:40.360Z",
+            "beyondinsight_password_safe": {
+                "useraudit": {
+                    "action_type": "Add",
+                    "audit_id": 1,
+                    "create_date": "2024-12-06T17:59:40.36Z",
+                    "ipaddress": "127.0.0.2",
+                    "section": "SecretsSafeFolder",
+                    "user_id": 1,
+                    "user_name": "test_user@test.com"
+                }
+            },
+            "ecs": {
+                "version": "8.11.0"
+            },
+            "event": {
+                "category": [
+                    "network"
+                ],
+                "dataset": "beyondinsight_password_safe.useraudit",
+                "ingested": "2024-12-06T19:38:10.723127898Z",
+                "kind": "event",
+                "module": "beyondinsight_password_safe",
+                "type": [
+                    "info",
+                    "access"
+                ]
+            },
+            "source": {
+                "ip": "127.0.0.2"
+            }
+        }
+    ]
+}

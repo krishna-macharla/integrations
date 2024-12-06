@@ -53,23 +53,20 @@ processors:
       value: "event"
   - set:
       field: event.category
-      value: ["info", "access"]
+      value: ["network"]
   - set:
       field: event.dataset
       value: "beyondinsight_password_safe.useraudit"
-  - set:
-      field: event.outcome
-      value: "{{{beyondinsight_password_safe.useraudit.section}}}"
+      
   - set:
       field: event.type
-      value: "{{{beyondinsight_password_safe.useraudit.action_type}}}"
+      value: ["info", "access"]
 
   #################### Set @timestamp ##########################
   - date:
       field: "beyondinsight_password_safe.useraudit.create_date"
       target_field: "@timestamp"
-      formats:
-        - strict_date_time
+      formats: ["ISO8601"]
 
   #################### User Audit Log fields ###################
   - rename:
@@ -87,23 +84,22 @@ processors:
         }
 
   #################### GeoIP Processor #########################
-
-  - script:
-      lang: painless
-      source: >
-        if (ctx?.beyondinsight_password_safe?.useraudit?.ipaddress != null) {
-          ctx['host.ip'] = ctx.beyondinsight_password_safe.useraudit.ipaddress;
-        }
-
-  - geoip:
-      if: ctx.beyondinsight_password_safe.useraudit?.ipaddress != null
-      field: "beyondinsight_password_safe.useraudit.ipaddress"
-      target_field: "host.geo"
+  - convert:
+      field: beyondinsight_password_safe.useraudit.ipaddress
+      target_field: source.ip
+      type: ip
       ignore_missing: true
+      ignore_failure: true
+  - geoip:
+      field: source.ip
+      target_field: geo.ip
+      ignore_missing: false
+      database_file: GeoLite2-ASN.mmdb
+      properties: [IP, ASN, ORGANIZATION_NAME, NETWORK]
 
   #################### Fingerprint ##########################
   - fingerprint:
-      fields: ["event.id", "user.id", "event.created"]
+      fields: ["event.id"]
       target_field: "event.fingerprint"
       method: "SHA-256"
       ignore_missing: true

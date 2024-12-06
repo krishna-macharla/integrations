@@ -27,7 +27,7 @@ redact:
   fields:
     - apikey
 program: |-
-
+  
   (
   	(!has(state.cursor) || has(state.cursor) && has(state.cursor.auth_cookie) && state.cursor.auth_cookie == null) ?
   		// Authenticating using API to retrieve auth Cookie
@@ -50,8 +50,8 @@ program: |-
   ).as(auth_cookie,
   	request(
   		"GET",
-  		state.url + "/Sessions")
-  		.with(
+  		state.url + "/Sessions"
+  	).with(
   		{
   			"Header": {
   				"Content-Type": ["application/json"],
@@ -70,7 +70,7 @@ program: |-
   					),
   					"want_more": false,
   					"cursor": {
-  						"auth_cookie": auth_cookie
+  						"auth_cookie": auth_cookie,
   					},
   				}
   			)
