@@ -1,0 +1,119 @@
+config_version: 2
+interval: {{interval}}
+{{#if enable_request_tracer}}
+resource.tracer.filename: "../../logs/cel/http-request-trace-*.ndjson"
+request.tracer.maxbackups: 5
+{{/if}}
+{{#if proxy_url}}
+resource.proxy_url: {{proxy_url}}
+{{/if}}
+{{#if ssl}}
+resource.ssl: {{ssl}}
+{{/if}}
+{{#if http_client_timeout}}
+resource.timeout: {{http_client_timeout}}
+{{/if}}
+resource.ssl.renegotiation: "freely"
+resource.ssl.verification_mode: "certificate"
+resource.url: {{url}}
+state:
+  {{!-- apikey: PS-Auth key={{apikeytoken}};runas={{username}};pwd={{password}} --}}
+  apikey: {{apikeytoken}}
+  want_more: false
+program: |
+  state.with(
+  state.?want_more.orValue(false) ? {"message": "no action required"} : 
+  post_request(
+    state.url + "/Auth/SignAppin",
+    "",
+    {}.encode_json()
+  ).with({
+    "Header": {
+      "Authorization": [state.apikey],
+      "Content-Type": ["application/json"]
+    },
+  }).do_request().as(resp, resp.StatusCode != 200 ? 
+  {
+        "events": {
+          "error": {
+            "code": string(resp.StatusCode),
+            "id": string(resp.Status),
+            "message": "POST:"+(
+              size(resp.Body) != 0 ?
+                string(resp.Body)
+              :
+                string(resp.Status) + ' (' + string(resp.StatusCode) + ')'
+            ),
+          },
+        },
+        "want_more": false,
+      }
+    :
+     resp.Header["Set-Cookie"].filter(e, e.contains("ASP.NET_SessionId")).as(sess,sess.size() > 0 ? 
+        sess[0]
+        :
+        ""
+      )  
+    ).as(cookie, cookie == "" ?  
+    {
+         "events": {
+          "error": {
+            "message": "Cookie Not Present: ASP.NET_SessionId"
+          },
+        },
+        "want_more": false,
+      }
+     :
+     get_request(
+      state.url + "/Sessions"
+      ).with({
+      "Header": {
+        "Cookie": [cookie],
+        "Content-Type": ["application/json"],
+      },
+    }).do_request().as(resp,resp.StatusCode != 200 ?
+    {
+         "events": {
+          "error": {
+            "code": string(resp.StatusCode),
+            "id": string(resp.Status),
+            "message": "GET:"+(
+              size(resp.Body) != 0 ?
+                string(resp.Body)
+              :
+                string(resp.Status) + ' (' + string(resp.StatusCode) + ')'
+            ),
+          },
+        },
+        "want_more": false,
+      }
+      :
+       bytes(resp.Body).decode_json().as(body,{
+        "events": body.map(e,
+  					{
+  						"message": e,
+  						?"event.original": state.?preserve_original_event.orValue(false) ? optional.of(e.encode_json()) : optional.none(),
+  					}
+  				),
+      }
+      )
+    )
+    )
+  )
+tags:
+{{#if preserve_original_event}}
+  - preserve_original_event
+{{/if}}
+{{#if preserve_duplicate_custom_fields}}
+  - preserve_duplicate_custom_fields
+{{/if}}
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{#contains "forwarded" tags}}
+publisher_pipeline.disable_host: true
+{{/contains}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}
