@@ -13,7 +13,7 @@ streams:
         description: Go Duration syntax (e.g., `10s`) for how often to fetch User Auditss
         show_user: false
         required: true
-        default: "20m"
+        default: "10s"
       - name: limit
         type: integer
         title: Limit
