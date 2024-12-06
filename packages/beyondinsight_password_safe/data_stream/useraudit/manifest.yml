@@ -1,16 +1,16 @@
-title: "BeyondTrust Sign-In Attempt Events"
+title: "beyondinsight User Audit Events"
 type: logs
 streams:
   - input: cel
-    title: "Collect BeyondTrust Sign-In Attempt Events"
-    description: "Collect sign-in attempts from BeyondTrust via the BeyondTrust Events API"
+    title: "Collect beyondinsight User Audit Events"
+    description: "Collect User Auditss from beyondinsight via the beyondinsight Events API"
     enabled: true
     template_path: cel.yml.hbs
     vars:
       - name: interval
         type: text
         title: Interval
-        description: Go Duration syntax (e.g., `10s`) for how often to fetch sign-in attempts
+        description: Go Duration syntax (e.g., `10s`) for how often to fetch User Auditss
         show_user: false
         required: true
         default: "10s"
@@ -26,7 +26,7 @@ streams:
         title: Tags
         multi: true
         show_user: true
-        description: Tags to be applied to the events, such as 'forwarded', 'BeyondTrust signin_attempts'
+        description: Tags to be applied to the events, such as 'forwarded', 'beyondinsight signin_attempts'
       - name: preserve_original_event
         required: true
         show_user: true

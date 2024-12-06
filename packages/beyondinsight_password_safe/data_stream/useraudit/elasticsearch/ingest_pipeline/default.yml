@@ -1,0 +1,109 @@
+---
+description: Pipeline for processing UserAudits logs
+processors:
+  - set:
+      field: event.ingested
+      value: "{{{_ingest.timestamp}}}"
+  - rename:
+      field: "message"
+      target_field: "beyondinsight_password_safe.useraudit"
+      ignore_missing: true
+
+  # Convert to snake_case
+  - script:
+      description: Convert Additional Info keys to snake case.
+      tag: additional-info-keys-to-snake-case
+      lang: painless
+      source: |
+        Map keysToSnakeCase(Map m) {
+          def regex = /_?([a-z])([A-Z]+)/;
+          def snakeCaseMap = [:];
+          for (entry in m.entrySet()) {
+            def k = entry.getKey();
+            def v = entry.getValue();
+            if (v instanceof Map) {
+              v = keysToSnakeCase(v);
+            } else if (v instanceof List) {
+              for (int i = 0; i < v.size(); i++) {
+                def item = v.get(i);
+                if (item instanceof Map) {
+                  v.set(i, keysToSnakeCase(item));
+                }
+              }
+            }
+            k = regex.matcher(k).replaceAll('$1_$2').toLowerCase();
+            snakeCaseMap.put(k, v);
+          }
+          return snakeCaseMap;
+        }
+
+        if (ctx.beyondinsight_password_safe.useraudit != null) {
+          ctx.beyondinsight_password_safe.useraudit = keysToSnakeCase(ctx.beyondinsight_password_safe.useraudit);
+        }
+
+  #################### Event ECS fields ##########################
+  - set:
+      field: event.module
+      value: "beyondinsight_password_safe"
+  - set:
+      field: ecs.version
+      value: "8.11.0"
+  - set:
+      field: event.kind
+      value: "event"
+  - set:
+      field: event.category
+      value: ["info", "access"]
+  - set:
+      field: event.dataset
+      value: "beyondinsight_password_safe.useraudit"
+  - set:
+      field: event.outcome
+      value: "{{{beyondinsight_password_safe.useraudit.section}}}"
+  - set:
+      field: event.type
+      value: "{{{beyondinsight_password_safe.useraudit.action_type}}}"
+
+  #################### Set @timestamp ##########################
+  - date:
+      field: "beyondinsight_password_safe.useraudit.create_date"
+      target_field: "@timestamp"
+      formats:
+        - strict_date_time
+
+  #################### User Audit Log fields ###################
+  - rename:
+      field: "beyondinsight_password_safe.useraudit.user"
+      target_field: "user.name"
+      ignore_missing: true
+
+#################### Adjust _id if AuditID is odd ##########################
+  - script:
+      lang: painless
+      source: >
+        if (ctx?.beyondinsight_password_safe?.useraudit?.audit_id != null) {
+          // Convert audit_id to string and assign it to _id
+          ctx['_id'] = ctx.beyondinsight_password_safe.useraudit.audit_id.toString();
+        }
+
+  #################### GeoIP Processor #########################
+
+  - script:
+      lang: painless
+      source: >
+        if (ctx?.beyondinsight_password_safe?.useraudit?.ipaddress != null) {
+          ctx['host.ip'] = ctx.beyondinsight_password_safe.useraudit.ipaddress;
+        }
+
+  - geoip:
+      if: ctx.beyondinsight_password_safe.useraudit?.ipaddress != null
+      field: "beyondinsight_password_safe.useraudit.ipaddress"
+      target_field: "host.geo"
+      ignore_missing: true
+
+  #################### Fingerprint ##########################
+  - fingerprint:
+      fields: ["event.id", "user.id", "event.created"]
+      target_field: "event.fingerprint"
+      method: "SHA-256"
+      ignore_missing: true

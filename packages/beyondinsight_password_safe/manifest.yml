@@ -1,6 +1,6 @@
 format_version: 3.3.0
-name: beyondtrust_password_safe
-title: "BeyondTrust Password Safe"
+name: beyondinsight_password_safe
+title: "BeyondInsight and Password Safe"
 version: 0.0.1
 source:
   license: "Elastic-2.0"
@@ -24,25 +24,38 @@ icons:
     size: 32x32
     type: image/svg+xml
 policy_templates:
-  - name: BeyondTrust
-    title: BeyondTrust Events
-    description: Collect events from BeyondTrust Events Reporting
+  - name: beyondinsight
+    title: beyondinsight Events
+    description: Collect events from beyondinsight Events Reporting
     inputs:
       - type: cel
-        title: Collect events from BeyondTrust Events API
-        description: Collect sign-in attempt, item usages, and audit events from BeyondTrust via the BeyondTrust Events API
+        title: Collect events from beyondinsight Events API
+        description: Collect sign-in attempt, item usages, and audit events from beyondinsight via the beyondinsight Events API
         vars:
           - name: url
             type: text
-            title: URL of BeyondTrust Events API Server
+            title: URL of beyondinsight Events API Server
             description: |
-              options: https://xxxxxxxxxxxx.com/BeyondTrust/api/public/v3. path is automatic
+              options: https://xxxxxxxxxxxx.com/beyondinsight/api/public/v3. path is automatic
             show_user: true
             required: true
           - name: apikeytoken
             type: text
-            title: API Key token of BeyondTrust Events API Server
-            description: "options: PS-Auth key=********************."
+            title: API Key token of beyondinsight Events API Server
+            description: "This is the API key token you have created on beyondinsight password safe  i.e it will be set asPS-Auth key=********************."
+            show_user: true
+            required: true
+            secret: true
+          - name: username
+            type: text
+            title: Username of beyondinsight Events API Server
+            description: "This is the username you have i.e it will be set as runas=****"
+            show_user: true
+            required: true
+          - name: password
+            type: text
+            title: User password of beyondinsight Events API Server
+            description: "This is the password of user you have"
             show_user: true
             required: true
             secret: true
