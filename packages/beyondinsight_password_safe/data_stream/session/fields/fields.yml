@@ -1,4 +1,4 @@
-- name: beyond_insight_password_safe
+- name: beyondinsight_password_safe
   title: 'Beyond Insight Password Safe Fields'
   type: group
   fields:

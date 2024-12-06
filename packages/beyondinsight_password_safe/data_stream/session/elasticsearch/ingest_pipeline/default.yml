@@ -3,11 +3,11 @@ description: Pipeline for processing sample logs
 processors:
   - rename:
       field: message
-      target_field: beyond_insight_password_safe.session
+      target_field: beyondinsight_password_safe.session
 
   - fingerprint:
       fields:
-        - beyond_insight_password_safe.session.SessionID
+        - beyondinsight_password_safe.session.SessionID
       target_field: "_id"
 
 ####################
@@ -61,8 +61,8 @@ processors:
           return snakeCaseMap;
         }
 
-        if (ctx.beyond_insight_password_safe.session != null) {
-          ctx.beyond_insight_password_safe.session = keysToSnakeCase(ctx.beyond_insight_password_safe.session);
+        if (ctx.beyondinsight_password_safe.session != null) {
+          ctx.beyondinsight_password_safe.session = keysToSnakeCase(ctx.beyondinsight_password_safe.session);
         }
 
 
@@ -87,35 +87,35 @@ processors:
 
   - set:
       field: event.dataset
-      value: beyond_insight_password_safe.session
+      value: beyondinsight_password_safe.session
 
   - set:
       field: event.module
-      value: beyond_insight_password_safe
+      value: beyondinsight_password_safe
 
   - set:
       field: event.id
-      copy_from: beyond_insight_password_safe.session.session_id
+      value: "{{{beyondinsight_password_safe.session.session_id}}}"
       ignore_empty_value: true
 
   - set:
       field: event.duration
-      copy_from: beyond_insight_password_safe.session.duration
+      copy_from: beyondinsight_password_safe.session.duration
       ignore_empty_value: true
 
   - date:
-      if: "ctx.beyond_insight_password_safe.session?.start_time != null"
-      field: ctx.beyond_insight_password_safe.session.start_time"
+      if: "ctx.beyondinsight_password_safe.session?.start_time != null"
+      field: "beyondinsight_password_safe.session.start_time"
       target_field: event.start
       formats: ["ISO8601"]
-      ignore_failure: true
+      ignore_failure: false
 
   - date:
-      if: "ctx.beyond_insight_password_safe.session?.end_time != null"
-      field: ctx.beyond_insight_password_safe.session.end_time
+      if: "ctx.beyondinsight_password_safe.session?.end_time != null"
+      field: "beyondinsight_password_safe.session.end_time"
       target_field: event.end
       formats: ["ISO8601"]
-      ignore_failure: true
+      ignore_failure: false
 
 
 ####################
@@ -125,24 +125,24 @@ processors:
       description: Convert status to their text meaning
       lang: painless
       source: |
-        if (ctx.beyond_insight_password_safe?.session?.status != null) {
-          int status = ctx.beyond_insight_password_safe.session.status;
+        if (ctx.beyondinsight_password_safe?.session?.status != null) {
+          int status = ctx.beyondinsight_password_safe.session.status;
           if (status == 0) {
-            ctx.beyond_insight_password_safe.session.status = "not_started";
+            ctx.beyondinsight_password_safe.session.status = "not_started";
           } else if (status == 1) {
-            ctx.beyond_insight_password_safe.session.status = "in_progress";
+            ctx.beyondinsight_password_safe.session.status = "in_progress";
           } else if (status == 2) {
-            ctx.beyond_insight_password_safe.session.status = "completed";
+            ctx.beyondinsight_password_safe.session.status = "completed";
           } else if (status == 5) {
-            ctx.beyond_insight_password_safe.session.status = "locked";
+            ctx.beyondinsight_password_safe.session.status = "locked";
           } else if (status == 7) {
-            ctx.beyond_insight_password_safe.session.status = "terminated";
+            ctx.beyondinsight_password_safe.session.status = "terminated";
           } else if (status == 8) {
-            ctx.beyond_insight_password_safe.session.status = "logged_off";
+            ctx.beyondinsight_password_safe.session.status = "logged_off";
           } else if (status == 9) {
-            ctx.beyond_insight_password_safe.session.status = "disconnected";
+            ctx.beyondinsight_password_safe.session.status = "disconnected";
           } else {
-            ctx.beyond_insight_password_safe.session.status = "unknown";
+            ctx.beyondinsight_password_safe.session.status = "unknown";
           }
         }
 
@@ -150,24 +150,24 @@ processors:
       description: Convert archive_status to text values
       lang: "painless"
       source: |
-        if (ctx.beyond_insight_password_safe.session?.archive_status != null) {
-          int archive_status = ctx.beyond_insight_password_safe.session.archive_status;
+        if (ctx.beyondinsight_password_safe.session?.archive_status != null) {
+          int archive_status = ctx.beyondinsight_password_safe.session.archive_status;
           if (archive_status == 0) {
-            ctx.beyond_insight_password_safe.session.archive_status = "not_archived";
+            ctx.beyondinsight_password_safe.session.archive_status = "not_archived";
           } else if (archive_status == 1) {
-            ctx.beyond_insight_password_safe.session.archive_status = "archived";
+            ctx.beyondinsight_password_safe.session.archive_status = "archived";
           } else if (archive_status == 2) {
-            ctx.beyond_insight_password_safe.session.archive_status = "restoring";
+            ctx.beyondinsight_password_safe.session.archive_status = "restoring";
           } else if (archive_status == 3) {
-            ctx.beyond_insight_password_safe.session.archive_status = "archiving";
+            ctx.beyondinsight_password_safe.session.archive_status = "archiving";
           } else if (archive_status == 4) {
-            ctx.beyond_insight_password_safe.session.archive_status = "session_not_found";
+            ctx.beyondinsight_password_safe.session.archive_status = "session_not_found";
           } else if (archive_status == 5) {
-            ctx.beyond_insight_password_safe.session.archive_status = "repository_offline";
+            ctx.beyondinsight_password_safe.session.archive_status = "repository_offline";
           } else if (archive_status == 6) {
-            ctx.beyond_insight_password_safe.session.archive_status = "unknown_archive_status";
+            ctx.beyondinsight_password_safe.session.archive_status = "unknown_archive_status";
           } else {
-            ctx.beyond_insight_password_safe.session.archive_status = "undefined_archive_status";
+            ctx.beyondinsight_password_safe.session.archive_status = "undefined_archive_status";
           }
         }
 
@@ -175,20 +175,33 @@ processors:
       description: Convert protocol to text values
       lang: "painless"
       source: |
-        if (ctx.beyond_insight_password_safe.session?.protocol != null) {
-          int protocol = ctx.beyond_insight_password_safe.session.protocol;
+        if (ctx.beyondinsight_password_safe.session?.protocol != null) {
+          int protocol = ctx.beyondinsight_password_safe.session.protocol;
           if (protocol == 0) {
-            ctx.beyond_insight_password_safe.session.protocol = "rdp";
+            ctx.beyondinsight_password_safe.session.protocol = "rdp";
           } else if (protocol == 1) {
-            ctx.beyond_insight_password_safe.session.protocol = "ssh";
+            ctx.beyondinsight_password_safe.session.protocol = "ssh";
           } else {
-            ctx.beyond_insight_password_safe.session.protocol = "unknown_protocol";
+            ctx.beyondinsight_password_safe.session.protocol = "unknown_protocol";
+          }
+        }
+
+  - script:
+      description: "Converts session_id and user_id to string"
+      lang: painless
+      source: >
+        if (ctx.beyondinsight_password_safe?.session != null) {
+          if (ctx.beyondinsight_password_safe.session.session_id != null) {
+            ctx.beyondinsight_password_safe.session.session_id = ctx.beyondinsight_password_safe.session.session_id.toString();
+          }
+          if (ctx.beyondinsight_password_safe.session.user_id != null) {
+            ctx.beyondinsight_password_safe.session.user_id = ctx.beyondinsight_password_safe.session.user_id.toString();
           }
         }
 
   - remove:
       field:
-        - beyond_insight_password_safe.session.token
+        - beyondinsight_password_safe.session.token
 
 on_failure:
   - append:
