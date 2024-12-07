@@ -1,15 +1,36 @@
 ---
-description: Pipeline for processing UserAudits logs
+description: Pipeline for processing sample logs
 processors:
-  - set:
-      field: event.ingested
-      value: "{{{_ingest.timestamp}}}"
   - rename:
-      field: "message"
-      target_field: "beyondinsight_password_safe.useraudit"
-      ignore_missing: true
+      field: message
+      target_field: beyondinsight_password_safe.useraudit
 
-  # Convert to snake_case
+  - fingerprint:
+      fields:
+        - beyondinsight_password_safe.useraudit.AuditID
+      target_field: "_id"
+
+####################
+# Scripts for processing input #
+####################
+  - script:
+      description: Drops null/empty values recursively.
+      lang: painless
+      source: |
+        boolean dropEmptyFields(Object object) {
+          if (object == null || object == "") {
+            return true;
+          } else if (object instanceof Map) {
+            ((Map) object).values().removeIf(value -> dropEmptyFields(value));
+            return (((Map) object).size() == 0);
+          } else if (object instanceof List) {
+            ((List) object).removeIf(value -> dropEmptyFields(value));
+            return (((List) object).length == 0);
+          }
+          return false;
+        }
+        dropEmptyFields(ctx);
+
   - script:
       description: Convert Additional Info keys to snake case.
       tag: additional-info-keys-to-snake-case
@@ -18,9 +39,11 @@ processors:
         Map keysToSnakeCase(Map m) {
           def regex = /_?([a-z])([A-Z]+)/;
           def snakeCaseMap = [:];
+
           for (entry in m.entrySet()) {
             def k = entry.getKey();
             def v = entry.getValue();
+
             if (v instanceof Map) {
               v = keysToSnakeCase(v);
             } else if (v instanceof List) {
@@ -31,6 +54,7 @@ processors:
                 }
               }
             }
+
             k = regex.matcher(k).replaceAll('$1_$2').toLowerCase();
             snakeCaseMap.put(k, v);
           }
@@ -41,65 +65,63 @@ processors:
           ctx.beyondinsight_password_safe.useraudit = keysToSnakeCase(ctx.beyondinsight_password_safe.useraudit);
         }
 
-  #################### Event ECS fields ##########################
-  - set:
-      field: event.module
-      value: "beyondinsight_password_safe"
+####################
+# ECS Fields #
+####################
   - set:
       field: ecs.version
-      value: "8.11.0"
+      value: '8.11.0'
+
   - set:
       field: event.kind
-      value: "event"
-  - set:
+      value: event
+
+  - append:
       field: event.category
-      value: ["network"]
+      value: iam
+
+  - append:
+      field: event.type
+      value: info
+
   - set:
       field: event.dataset
-      value: "beyondinsight_password_safe.useraudit"
-      
+      value: beyondinsight_password_safe.useraudit
+
   - set:
-      field: event.type
-      value: ["info", "access"]
+      field: event.module
+      value: beyondinsight_password_safe
+
+  - set:
+      field: event.id
+      value: "{{{beyondinsight_password_safe.useraudit.audit_id}}}"
+      ignore_empty_value: true
+
+  - set:
+      field: user.id
+      value: "{{{beyondinsight_password_safe.useraudit.user_id}}}"
+      ignore_empty_value: true
+  - set:
+      field: user.name
+      value: "{{{beyondinsight_password_safe.useraudit.user_name}}}"
+      ignore_empty_value: true           
 
   #################### Set @timestamp ##########################
-  - date:
-      field: "beyondinsight_password_safe.useraudit.create_date"
-      target_field: "@timestamp"
-      formats: ["ISO8601"]
+  # - date:
+  #     field: "beyondinsight_password_safe.useraudit.create_date"
+  #     target_field: "@timestamp"
+  #     formats: ["ISO8601"]
 
-  #################### User Audit Log fields ###################
+ #################### User Audit Log fields ###################
   - rename:
       field: "beyondinsight_password_safe.useraudit.user"
       target_field: "user.name"
       ignore_missing: true
 
-#################### Adjust _id if AuditID is odd ##########################
-  - script:
-      lang: painless
-      source: >
-        if (ctx?.beyondinsight_password_safe?.useraudit?.audit_id != null) {
-          // Convert audit_id to string and assign it to _id
-          ctx['_id'] = ctx.beyondinsight_password_safe.useraudit.audit_id.toString();
-        }
-
-  #################### GeoIP Processor #########################
-  - convert:
-      field: beyondinsight_password_safe.useraudit.ipaddress
-      target_field: source.ip
-      type: ip
-      ignore_missing: true
-      ignore_failure: true
-  - geoip:
-      field: source.ip
-      target_field: geo.ip
-      ignore_missing: false
-      database_file: GeoLite2-ASN.mmdb
-      properties: [IP, ASN, ORGANIZATION_NAME, NETWORK]
-
-  #################### Fingerprint ##########################
-  - fingerprint:
-      fields: ["event.id"]
-      target_field: "event.fingerprint"
-      method: "SHA-256"
-      ignore_missing: true
+on_failure:
+  - append:
+      field: error.message
+      value: '{{{_ingest.on_failure_message}}}'
+  - set:
+      field: event.kind
+      value: pipeline_error
