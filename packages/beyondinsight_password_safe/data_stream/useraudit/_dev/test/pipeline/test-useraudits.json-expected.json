@@ -7,7 +7,7 @@
                     "action_type": "Add",
                     "audit_id": 1,
                     "create_date": "2024-12-06T17:59:40.36Z",
-                    "ipaddress": "127.0.0.2",
+                    "ipaddress": "216.160.83.56",
                     "section": "SecretsSafeFolder",
                     "user_id": 1,
                     "user_name": "test_user@test.com"
@@ -28,10 +28,20 @@
                     "info"
                 ]
             },
-            "host": {
-                "ip": [
-                    "127.0.0.2"
-                ]
+            "source": {
+                "geo": {
+                    "city_name": "Milton",
+                    "continent_name": "North America",
+                    "country_iso_code": "US",
+                    "country_name": "United States",
+                    "location": {
+                        "lat": 47.2513,
+                        "lon": -122.3149
+                    },
+                    "region_iso_code": "US-WA",
+                    "region_name": "Washington"
+                },
+                "ip": "216.160.83.56"
             },
             "user": {
                 "id": "1",
