@@ -28,7 +28,7 @@
                     "info"
                 ]
             },
-            "source": {
+            "host": {
                 "geo": {
                     "city_name": "Milton",
                     "continent_name": "North America",
@@ -41,7 +41,9 @@
                     "region_iso_code": "US-WA",
                     "region_name": "Washington"
                 },
-                "ip": "216.160.83.56"
+                "ip": [
+                    "216.160.83.56"
+                ]
             },
             "user": {
                 "id": "1",

@@ -1,7 +1,7 @@
 config_version: 2
 interval: {{interval}}
 {{#if enable_request_tracer}}
-resource.tracer.filename: "../../logs/cel/http-request-trace-*.ndjson"
+resource.tracer.filename: "../../logs/beyondinsight_password_safe/http-request-trace-*.ndjson"
 request.tracer.maxbackups: 5
 {{/if}}
 {{#if proxy_url}}
