@@ -1,9 +1,9 @@
-title: "Managed Systems"
+title: "Managed System"
 type: logs
 streams:
   - input: cel
-    title: Managed Systems Logs
-    description: Collect Managed Systems logs
+    title: Managed System Logs
+    description: Collect Managed System logs
     enabled: true
     template_path: cel.yml.hbs
     vars:
@@ -20,7 +20,7 @@ streams:
         description: Number of events to fetch per request
         show_user: true
         required: true
-        default: 1
+        default: 1000
       - name: tags
         type: text
         title: Tags
