@@ -1,5 +1,5 @@
 ---
-description: Pipeline for processing beyondinsight and password safe user audits 
+description: Pipeline for processing BeyondInsight User Audit Events 
 processors:
   - rename:
       field: message
