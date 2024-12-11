@@ -26,5 +26,5 @@
           description: 'IP address from which the user action originated'
         - name: create_date
           type: date
-          format: [ISO8601]
+          format: 'ISO8601'
           description: 'Timestamp of when the user action was created'
