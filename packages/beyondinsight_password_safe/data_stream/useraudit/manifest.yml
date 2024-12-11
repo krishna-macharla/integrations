@@ -1,9 +1,9 @@
-title: "beyondinsight User Audit Events"
+title: "BeyondInsight User Audit Events"
 type: logs
 streams:
   - input: cel
-    title: "Collect beyondinsight User Audit Events"
-    description: "Collect User Audits from beyondinsight via the beyondinsight Events API"
+    title: "Collect BeyondInsight User Audit Events"
+    description: "Collect User Audits from BeyondInsight via the BeyondInsight Events API"
     enabled: true
     template_path: cel.yml.hbs
     vars:
@@ -26,7 +26,7 @@ streams:
         title: Tags
         multi: true
         show_user: true
-        description: Tags to be applied to the events, such as 'forwarded', 'beyondinsight signin_attempts'
+        description: Tags to be applied to the events, such as 'forwarded', 'BeyondInsight User Audit Event'
       - name: preserve_original_event
         required: true
         show_user: true

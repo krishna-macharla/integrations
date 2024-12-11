@@ -24,25 +24,25 @@ icons:
     size: 32x32
     type: image/svg+xml
 policy_templates:
-  - name: beyondinsight
-    title: beyondinsight Events
-    description: Collect events from beyondinsight Events Reporting
+  - name: BeyondInsight
+    title: BeyondInsight Events
+    description: Collect events from BeyondInsight Events Reporting
     inputs:
       - type: cel
-        title: Collect events from beyondinsight Events API
-        description: Collect sign-in attempt, item usages, and audit events from beyondinsight via the beyondinsight Events API
+        title: Collect events from BeyondInsight Events API
+        description: Collect sign-in attempt, item usages, and audit events from BeyondInsight via the BeyondInsight Events API
         vars:
           - name: url
             type: text
-            title: URL of beyondinsight Events API Server
+            title: URL of BeyondInsight Events API Server
             description: |
-              options: https://xxxxxxxxxxxx.com/beyondinsight/api/public/v3. path is automatic
+              options: https://xxxxxxxxxxxx.com/BeyondInsight/api/public/v3. path is automatic
             show_user: true
             required: true
           - name: apikeytoken
             type: text
-            title: API Key token of beyondinsight Events API Server
-            description: "This is the API key token you have created on beyondinsight password safe  i.e it will be set asPS-Auth key=********************."
+            title: API Key token of BeyondInsight Events API Server
+            description: "This is the API key token you have created on BeyondInsight password safe  i.e it will be set asPS-Auth key=********************."
             show_user: true
             required: true
             secret: true
