@@ -20,8 +20,8 @@ streams:
         multi: false
         required: true
         show_user: true
-        default: 90d
-        description: How far back to pull the BeyondInsight User Audit Events from BeyondInsight User Audit  API. Supported units for this parameter are d/h/m/s.
+        default: 90
+        description: How far back to pull the BeyondInsight User Audit Events from BeyondInsight User Audit  API.Default is 90 Days.
       - name: limit
         type: integer
         title: Limit
