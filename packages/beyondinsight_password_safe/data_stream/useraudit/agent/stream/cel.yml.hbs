@@ -51,7 +51,7 @@ program: |-
   		"GET",
   		state.url + "/UserAudits?" + {
   			"limit": [string(state.limit)],
-  			"startdate": [string(state.?cursor.startdate.orValue("2024-10-10T20:58:38.513Z"))],
+  			"startdate": [string(state.?cursor.startdate.orValue((now - duration(state.initial_interval)).format(time_layout.RFC3339)))],
   			"enddate": [string(state.?cursor.enddate.orValue(""))],
   		}.format_query()
   	).with(

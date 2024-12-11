@@ -14,6 +14,14 @@ streams:
         show_user: false
         required: true
         default: "10s"
+      - name: initial_interval
+        type: text
+        title: Initial Interval
+        multi: false
+        required: true
+        show_user: true
+        default: 90d
+        description: How far back to pull the BeyondInsight User Audit Events from BeyondInsight User Audit  API. Supported units for this parameter are d/h/m/s.
       - name: limit
         type: integer
         title: Limit

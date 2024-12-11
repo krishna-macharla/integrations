@@ -107,12 +107,10 @@ processors:
       field: beyondinsight_password_safe.useraudit.ipaddress
       target_field: beyondinsight_password_safe.useraudit.ipaddress
       type: ip
-      ignore_missing: true
       if: ctx.beyondinsight_password_safe.useraudit?.ipaddress != null && ctx.beyondinsight_password_safe.useraudit.ipaddress != ''
-      on_failure:
-        - append:
-            field: error.message
-            value: 'Processor {{{_ingest.on_failure_processor_type}}} in pipeline {{{_ingest.on_failure_pipeline}}} failed with message: {{{_ingest.on_failure_message}}}'
+      ignore_failure: true 
+      ignore_missing: true
+
   - append:
       field: host.ip
       value: "{{{beyondinsight_password_safe.useraudit.ipaddress}}}"
@@ -121,6 +119,7 @@ processors:
       field: host.ip
       target_field: host.geo
       ignore_missing: true
+      ignore_failure: true
 ################### Set @timestamp ##########################
   - date:
      field: "beyondinsight_password_safe.useraudit.create_date"
