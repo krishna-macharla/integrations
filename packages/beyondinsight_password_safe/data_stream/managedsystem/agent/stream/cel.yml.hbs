@@ -17,7 +17,10 @@ resource.ssl.renegotiation: "freely"
 resource.ssl.verification_mode: "certificate"
 resource.url: {{url}}
 state:
+
+  want_more: false
   offset: 0
+  initial_interval: {{initial_interval}}
   limit: {{limit}}
   apikeytoken: {{apikeytoken}}
   password: {{password}}
@@ -26,7 +29,7 @@ redact:
   fields:
     - apikey
 program: |-
-  
+
   (
   	(!has(state.cursor) || has(state.cursor) && has(state.cursor.auth_cookie) && state.cursor.auth_cookie == null) ?
   		// Authenticating using API to retrieve auth Cookie
@@ -51,7 +54,7 @@ program: |-
   		"GET",
   		state.url + "/ManagedSystems?" + {
   			"limit": [string(state.limit)],
-  			"offset": [state.cursor.offset.orValue("0")],
+  			"offset": [has(state.?cursor.offset) ? string(state.cursor.offset) : "0"],
   		}.format_query()
   	).with(
   		{
@@ -70,10 +73,10 @@ program: |-
   							?"event.original": state.?preserve_original_event.orValue(false) ? optional.of(e.encode_json()) : optional.none(),
   						}
   					),
-  					"want_more": (int(state.cursor.offset.orValue(0)) != body.TotalCount) ? true : false,
+  					"want_more": ((has(state.?cursor.offset) ? int(state.cursor.offset) : int(0)) != body.TotalCount) ? true : false,
   					"cursor": {
   						"auth_cookie": auth_cookie,
-  						"offset": state.cursor.offset.orValue(int(0) + size(body.Data)),
+  						"offset": (has(state.?cursor.offset) ? int(state.cursor.offset) : int(0)) + size(body.Data),
   					},
   				}
   			)
