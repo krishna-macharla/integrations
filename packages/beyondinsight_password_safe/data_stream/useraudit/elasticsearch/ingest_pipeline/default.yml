@@ -104,6 +104,13 @@ processors:
   - drop:
       if: ctx.beyondinsight_password_safe.useraudit?.code == '401'  
  ###################### Override host.ip ######################
+  - script:
+      lang: painless
+      source: |
+         def ipstring = ctx.beyondinsight_password_safe.useraudit.ipaddress.toString().splitOnToken(".");
+         def ip = String.valueOf(Integer.parseInt(ipstring[0]))+"."+String.valueOf(Integer.parseInt(ipstring[1]))+"."+String.valueOf(Integer.parseInt(ipstring[2]))+"."+String.valueOf(Integer.parseInt(ipstring[3]));
+         ctx.beyondinsight_password_safe.useraudit.ipaddress = ip;
+
   - convert:
       field: beyondinsight_password_safe.useraudit.ipaddress
       target_field: beyondinsight_password_safe.useraudit.ipaddress
