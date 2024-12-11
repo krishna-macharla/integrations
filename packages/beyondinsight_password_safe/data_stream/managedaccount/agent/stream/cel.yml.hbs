@@ -17,10 +17,7 @@ resource.ssl.renegotiation: "freely"
 resource.ssl.verification_mode: "certificate"
 resource.url: {{url}}
 state:
-
-  want_more: false
   offset: 0
-  initial_interval: {{initial_interval}}
   limit: {{limit}}
   apikeytoken: {{apikeytoken}}
   password: {{password}}
@@ -54,7 +51,7 @@ program: |-
   		"GET",
   		state.url + "/ManagedAccounts?" + {
   			"limit": [string(state.limit)],
-  			"offset": [has(state.?cursor.offset) ? string(state.cursor.offset) : "0"],
+  			"offset": [state.?cursor.offset.orValue("0")],
   		}.format_query()
   	).with(
   		{
@@ -76,7 +73,7 @@ program: |-
   					"want_more": (size(body) > 0) ? true : false,
   					"cursor": {
   						"auth_cookie": auth_cookie,
-  						"offset": (has(state.?cursor.offset) ? int(state.cursor.offset) : int(0)) + size(body),
+  						"offset": state.cursor.offset.orValue(int(0)) + size(body),
   					},
   				}
   			)
