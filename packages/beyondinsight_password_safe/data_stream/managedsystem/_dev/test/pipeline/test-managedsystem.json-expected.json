@@ -2,7 +2,7 @@
     "expected": [
         {
             "beyondinsight_password_safe": {
-                "managed_system": {
+                "managedsystem": {
                     "access_url": "http://aardvarkagreement.com/manage",
                     "account_name_format": 0,
                     "application_host_id": 2,
@@ -57,7 +57,7 @@
                 "category": [
                     "iam"
                 ],
-                "dataset": "beyondinsight_password_safe.managed_system",
+                "dataset": "beyondinsight_password_safe.managedsystem",
                 "kind": "asset",
                 "module": "beyondinsight_password_safe",
                 "type": [

@@ -2,7 +2,7 @@
   title: 'Beyond Insight Password Safe Fields'
   type: group
   fields:
-    - name: managed_system
+    - name: managedsystem
       type: group
       description: 'Managed System related data fields'
       fields:
