@@ -10,6 +10,17 @@
                 "IPAddress": "216.160.83.56",
                 "CreateDate": "2024-12-06T17:59:40.36Z"
             }
+        },
+        {
+            "message": {
+                "AuditID": 2,
+                "ActionType": "Add",
+                "Section": "SecretsSafeFolder",
+                "UserID": 2,
+                "UserName": "test_user@test.com",
+                "IPAddress": "216.160.83.56",
+                "CreateDate": "2024-12-07T17:59:40.36Z"
+            }
         }
     ]
 }

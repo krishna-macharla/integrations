@@ -65,7 +65,7 @@ program: |-
   		(resp.StatusCode == 401) ?
   			state.with(
   				{
-  					"events": [],
+  					"events": [{"message": {"reason": "User not authenticated", "code": string(resp.StatusCode)}.encode_json()}],
   					"want_more": true,
   					"cursor": {
   						"auth_cookie": null,

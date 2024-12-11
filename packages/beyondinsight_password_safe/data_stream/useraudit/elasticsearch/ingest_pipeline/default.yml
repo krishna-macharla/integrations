@@ -101,7 +101,8 @@ processors:
       field: user.name
       value: "{{{beyondinsight_password_safe.useraudit.user_name}}}"
       ignore_empty_value: true           
-
+  - drop:
+      if: ctx.beyondinsight_password_safe.useraudit?.code == '401'  
  ###################### Override host.ip ######################
   - convert:
       field: beyondinsight_password_safe.useraudit.ipaddress
