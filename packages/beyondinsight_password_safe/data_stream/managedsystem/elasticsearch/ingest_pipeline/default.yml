@@ -93,6 +93,8 @@ processors:
       field: event.module
       value: beyondinsight_password_safe
 
+  - drop:
+      if: ctx.beyondinsight_password_safe.managedsystem?.code == '401'
 on_failure:
   - append:
       field: error.message

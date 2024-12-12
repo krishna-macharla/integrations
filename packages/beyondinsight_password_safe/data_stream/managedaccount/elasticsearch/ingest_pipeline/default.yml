@@ -93,7 +93,8 @@ processors:
       field: event.module
       value: beyondinsight_password_safe
 
-
+  - drop:
+      if: ctx.beyondinsight_password_safe.managedaccount?.code == '401'
 ####################
 # Managed Account Fields #
 ####################
