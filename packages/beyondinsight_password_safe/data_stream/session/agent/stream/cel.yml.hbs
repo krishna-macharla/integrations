@@ -56,6 +56,17 @@ program: |-
   			},
   		}
   	).do_request().as(resp,
+  	    (resp.StatusCode == 401) ?
+  			state.with(
+  				{
+  					"events": [{"message": {"reason": "User not authenticated", "code": string(resp.StatusCode)}.encode_json()}],
+  					"want_more": true,
+  					"cursor": {
+  						"auth_cookie": null
+                    }
+  				}
+  			)
+  		:
   		bytes(resp.Body).decode_json().as(body,
   			state.with(
   				{
