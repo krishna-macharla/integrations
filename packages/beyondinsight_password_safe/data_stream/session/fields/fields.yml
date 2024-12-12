@@ -1,10 +1,9 @@
 - name: beyondinsight_password_safe
-  title: 'Beyond Insight Password Safe Fields'
+  title: 'BeyondInsight Password Safe Sessions Fields'
   type: group
   fields:
     - name: session
       type: group
-      description: 'Session related data fields'
       fields:
         - name: session_id
           type: keyword

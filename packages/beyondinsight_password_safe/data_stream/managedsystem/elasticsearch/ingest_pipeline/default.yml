@@ -1,5 +1,5 @@
 ---
-description: Pipeline for processing Managed System logs
+description: Pipeline for processing BeyondInsight Password Safe Managed Systems logs
 processors:
   - rename:
       field: message

@@ -1,10 +1,9 @@
 - name: beyondinsight_password_safe
-  title: 'Beyond Insight Password Safe Fields'
+  title: 'BeyondInsight Password Safe Managed Systems Fields'
   type: group
   fields:
     - name: managed_system
       type: group
-      description: 'Managed System related data fields'
       fields:
         - name: workgroup_id
           type: integer

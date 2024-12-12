@@ -1,9 +1,9 @@
-title: "Managed System"
+title: "BeyondInsight Password Safe Managed Systems"
 type: logs
 streams:
   - input: cel
-    title: Managed System Logs
-    description: Collect Managed System logs
+    title: BeyondInsight Password Safe Managed Systems Logs
+    description: BeyondInsight Password Safe Managed Systems Request Settings
     enabled: true
     template_path: cel.yml.hbs
     vars:

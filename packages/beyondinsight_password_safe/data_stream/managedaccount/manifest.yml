@@ -1,9 +1,9 @@
-title: "Managed Accounts"
+title: "BeyondInsight Password Safe Managed Accounts"
 type: logs
 streams:
   - input: cel
-    title: Managed Accounts Logs
-    description: Collect Managed Accounts logs
+    title: BeyondInsight Password Safe Managed Accounts Logs
+    description: BeyondInsight Password Safe Managed Accounts Request Settings
     enabled: true
     template_path: cel.yml.hbs
     vars:
