@@ -21,9 +21,7 @@ This data stream utilizes the BeyondInsight API's `/v3//ManagedAccounts` endpoin
 
 ### API Key based authentication
 All the connectors utilizes API key from Beyondtrust and use it with SignAppIn endpoint passing the key as authorization header.
-The API key is a cryptographically strong random sequence of numbers hashed into a 128-character string. It is encrypted and stored
-internally using AES 256 encryption. Any language with a Representational State Transfer (REST) compliant interface can access the API
-with the API key and RunAs in the authorization header.
+Any language with a Representational State Transfer (REST) compliant interface can access the API with the API key and RunAs in the authorization header.
 
 **Authorization header**
 Use the web request authorization header to communicate the API application key, the RunAs username, and the user password:
@@ -41,7 +39,8 @@ Authorization=PS-Auth key=c479a66f…c9484d; runas=doe-main\johndoe; pwd=[un1qu3
 
 ### Step 1: Create an Application in BeyondTrust:
 
-To create a connection to BeyondInsight, an [application must be created](https://learn.jamf.com/en-US/bundle/jamf-pro-documentation-current/page/API_Roles_and_Clients.html) first. Credentials generated during this process are required for the subsequent steps.
+To create a connection to BeyondInsight, an [application must be created](https://www.beyondtrust.com/docs/beyondinsight-password-safe/documents/ps/bi-ps-api.pdf) first. 
+Credentials generated during this process are required for the subsequent steps.
 
 **BeyondInsight API Credentials**  
 - **`client_id`** is an app specific ID generated during app creation, and is available in the app settings.
@@ -70,92 +69,80 @@ An example event for `useraudit` looks as following:
 
 ```json
 {
-        "_index": ".ds-logs-beyondinsight_password_safe.useraudit-default-2024.12.11-000001",
-        "_id": "LBcj7DNTqMFRXobggSHJ376m2kk=",
-        "_score": 1,
-        "_ignored": [
-          "beyondinsight_password_safe.useraudit.ipaddress"
-        ],
-        "_source": {
-          "input": {
-            "type": "cel"
-          },
-          "agent": {
-            "name": "docker-fleet-agent",
-            "id": "ac818783-65d7-449f-9d6e-92870ed35c5c",
-            "type": "filebeat",
-            "ephemeral_id": "7d367dd3-1b77-441e-83bb-d015782c1bc5",
-            "version": "8.12.2"
-          },
-          "beyondinsight_password_safe": {
-            "useraudit": {
-              "ipaddress": "223.233.080.172",
-              "audit_id": 22182,
-              "action_type": "Login",
-              "user_id": 6,
-              "user_name": "balaji_dongare@epam.com",
-              "section": "PMM API SignAppIn",
-              "create_date": "2024-12-11T11:31:55.107Z"
-            }
-          },
-          "@timestamp": "2024-12-11T11:31:55.107Z",
-          "ecs": {
-            "version": "8.11.0"
-          },
-          "data_stream": {
-            "namespace": "default",
-            "type": "logs",
-            "dataset": "beyondinsight_password_safe.useraudit"
-          },
-          "elastic_agent": {
-            "id": "ac818783-65d7-449f-9d6e-92870ed35c5c",
-            "version": "8.12.2",
-            "snapshot": false
-          },
-          "host": {
-            "hostname": "docker-fleet-agent",
-            "os": {
-              "kernel": "6.6.51-0-virt",
-              "codename": "focal",
-              "name": "Ubuntu",
-              "type": "linux",
-              "family": "debian",
-              "version": "20.04.6 LTS (Focal Fossa)",
-              "platform": "ubuntu"
-            },
-            "ip": [
-              "172.24.0.7"
-            ],
-            "containerized": false,
-            "name": "docker-fleet-agent",
-            "id": "29b44b57f32c4ff282841a8a4406ef95",
-            "mac": [
-              "02-42-AC-18-00-07"
-            ],
-            "architecture": "aarch64"
-          },
-          "event": {
-            "agent_id_status": "verified",
-            "ingested": "2024-12-11T11:32:00Z",
-            "kind": "event",
-            "module": "beyondinsight_password_safe",
-            "id": "22182",
-            "category": [
-              "iam"
-            ],
-            "type": [
-              "info"
-            ],
-            "dataset": "beyondinsight_password_safe.useraudit"
-          },
-          "user": {
-            "name": "balaji_dongare@epam.com",
-            "id": "6"
-          }
-        }
+  "_index": ".ds-logs-beyondinsight_password_safe.useraudit-default-2024.12.11-000001",
+  "_id": "Z6i+/IqzAb9roIH6zU8rsBDyUdg=",
+  "_score": 1,
+  "_source": {
+    "input": {
+      "type": "cel"
+    },
+    "agent": {
+      "name": "docker-fleet-agent",
+      "id": "98cd62df-49de-41c8-93ce-8b94d4bf06c8",
+      "ephemeral_id": "7e08184f-b554-45d0-974e-7319b4155b5d",
+      "type": "filebeat",
+      "version": "8.12.2"
+    },
+    "beyondinsight_password_safe": {
+      "useraudit": {
+        "ipaddress": "223.233.80.172",
+        "audit_id": 22239,
+        "action_type": "Login",
+        "user_id": 6,
+        "user_name": "balaji_dongare@epam.com",
+        "section": "PMM API SignAppIn",
+        "create_date": "2024-12-11T21:03:20.503Z"
       }
+    },
+    "@timestamp": "2024-12-11T21:03:20.503Z",
+    "ecs": {
+      "version": "8.11.0"
+    },
+    "data_stream": {
+      "namespace": "default",
+      "type": "logs",
+      "dataset": "beyondinsight_password_safe.useraudit"
+    },
+    "elastic_agent": {
+      "id": "98cd62df-49de-41c8-93ce-8b94d4bf06c8",
+      "version": "8.12.2",
+      "snapshot": false
+    },
+    "host": {
+      "ip": [
+        "223.233.80.172"
+      ]
+    },
+    "event": {
+      "agent_id_status": "verified",
+      "ingested": "2024-12-11T21:08:18Z",
+      "kind": "event",
+      "module": "beyondinsight_password_safe",
+      "id": "22239",
+      "category": [
+        "iam"
+      ],
+      "type": [
+        "info"
+      ],
+      "dataset": "beyondinsight_password_safe.useraudit"
+    },
+    "user": {
+      "name": "balaji_dongare@epam.com",
+      "id": "6"
+    },
+    "tags": [
+      "preserve_original_event",
+      "forwarded"
+    ]
+  }
+}
  
 ```
+
+**ECS Field Reference**
+
+Please refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ecs-field-reference.html) for detailed information on ECS fields.
 
 The following non-ECS fields are used in useraudit documents:
 
@@ -163,20 +150,20 @@ The following non-ECS fields are used in useraudit documents:
 
 | Field | Description | Type |
 |---|---|---|
-| @timestamp | Event timestamp. | date |
+| @timestamp | Event timestamp | date |
 | data_stream.dataset | Data stream dataset. | constant_keyword |
 | data_stream.namespace | Data stream namespace. | constant_keyword |
 | data_stream.type | Data stream type. | constant_keyword |
-| event.dataset |  | constant_keyword |
-| event.module |  | constant_keyword |
+| event.dataset | Dataset | constant_keyword |
+| event.module | Module | constant_keyword |
 | input.type | Input type | keyword |
-| beyondinsight_password_safe.useraudit.audit_id |  | keyword |
-| beyondinsight_password_safe.useraudit.action_type |  | keyword |
-| beyondinsight_password_safe.useraudit.section |  | boolean |
-| beyondinsight_password_safe.useraudit.user_id |  | integer |
-| beyondinsight_password_safe.useraudit.user_name |  | keyword |
-| beyondinsight_password_safe.useraudit.ipaddress |  | ip |
-| beyondinsight_password_safe.useraudit.create_date |  | date |
+| beyondinsight_password_safe.useraudit.audit_id | Audit id | keyword |
+| beyondinsight_password_safe.useraudit.action_type | Action type | keyword |
+| beyondinsight_password_safe.useraudit.section | Section | boolean |
+| user.id | User id | keyword |
+| user.name | User name | keyword |
+| host.ip | IP address | ip |
+| beyondinsight_password_safe.useraudit.create_date | Create date | date |
 
 
 
@@ -277,26 +264,31 @@ An example event for `session` looks as following:
  
 ```
 
+**ECS Field Reference**
+
+Please refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ecs-field-reference.html) for detailed information on ECS fields.
+
 The following non-ECS fields are used in session documents:
 
 **Exported fields**
 
 | Field | Description | Type |
 |---|---|---|
-| @timestamp | Event timestamp. | date |
+| @timestamp | Event timestamp | date |
 | data_stream.dataset | Data stream dataset. | constant_keyword |
 | data_stream.namespace | Data stream namespace. | constant_keyword |
 | data_stream.type | Data stream type. | constant_keyword |
 | event.dataset |  | constant_keyword |
 | event.module |  | constant_keyword |
 | input.type | Input type | keyword |
-| beyondinsight_password_safe.useraudit.audit_id |  | keyword |
-| beyondinsight_password_safe.useraudit.action_type |  | keyword |
-| beyondinsight_password_safe.useraudit.section |  | boolean |
-| beyondinsight_password_safe.useraudit.user_id |  | integer |
-| beyondinsight_password_safe.useraudit.user_name |  | keyword |
-| beyondinsight_password_safe.useraudit.ipaddress |  | ip |
-| beyondinsight_password_safe.useraudit.create_date |  | date |
+| beyondinsight_password_safe.session.sessionid | Session id | keyword |
+| beyondinsight_password_safe.session.user_id | User id | keyword |
+| Event.start | Session state time | date |
+| Event.end | Session end date | date |
+| beyondinsight_password_safe.session.duration | Session duration | integer |
+| beyondinsight_password_safe.session.asset_name | Asset name | keyword |
+| beyondinsight_password_safe.session.record_key | Record key | keyword |
+| beyondinsight_password_safe.session.protocol | Protocol | keyword |
 
 ### ManagedSystem
 
@@ -410,72 +402,77 @@ An example event for `managedsystem` looks as following:
  
 ```
 
+**ECS Field Reference**
+
+Please refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ecs-field-reference.html) for detailed information on ECS fields.
+
 The following non-ECS fields are used in managedsystem documents:
 
 **Exported fields**
 
-| Field | Target Field | Type |
+| Field | Description | Type |
 |---|---|---|
-|@timestamp (ECS field)|date
-beyondinsight_password_safe.managedsystem|Data_stream.dataset (ECS field)|Constand_keyword
-default|data_stream.namespace (ECS field)|constant_keyword
-logs|data_stream.type (ECS field)|constant_keyword
-“managedsystem”|tags (ECS field)|constant_keyword
-cel|input.type (ECS field)|keyword
-beyondinsight_password_safe.managedsystem.TotalCount|beyondinsight_password_safe.managedsystem.total_count|integer
-beyondinsight_password_safe.managedsystem.Data|beyondinsight_password_safe.managedsystem.data|nested
-beyondinsight_password_safe.managedsystem.Data.WorkgroupID|beyondinsight_password_safe.managedsystem.data.workgroup_id|integer
-beyondinsight_password_safe.managedsystem.Data.HostName|beyondinsight_password_safe.managedsystem.data.host_name|keyword
-beyondinsight_password_safe.managedsystem.Data.IPAddress|beyondinsight_password_safe.managedsystem.data.ipaddress|ip
-beyondinsight_password_safe.managedsystem.Data.DNSName|beyondinsight_password_safe.managedsystem.data.dns_name|keyword
-beyondinsight_password_safe.managedsystem.Data.InstanceName|beyondinsight_password_safe.managedsystem.data.instance_name|keyword
-beyondinsight_password_safe.managedsystem.Data.IsDefalutInstance|beyondinsight_password_safe.managedsystem.data.is_default_instance|bool
-beyondinsight_password_safe.managedsystem.Data.Template|beyondinsight_password_safe.managedsystem.data.template|keyword
-beyondinsight_password_safe.managedsystem.Data.ForestName|beyondinsight_password_safe.managedsystem.data.forest_name|keyword
-beyondinsight_password_safe.managedsystem.Data.UseSSL|beyondinsight_password_safe.managedsystem.data.use_ssl|bool
-beyondinsight_password_safe.managedsystem.Data.ManagedSystemID|beyondinsight_password_safe.managedsystem.data.managed_system_id|integer
-beyondinsight_password_safe.managedsystem.Data.EntityTypeID|beyondinsight_password_safe.managedsystem.data.entity_type_id|integer
-beyondinsight_password_safe.managedsystem.Data.AssetID|beyondinsight_password_safe.managedsystem.data.asset_id|integer
-beyondinsight_password_safe.managedsystem.Data.DatabaseID|beyondinsight_password_safe.managedsystem.data.database_id|integer
-beyondinsight_password_safe.managedsystem.Data.DirectoryID|beyondinsight_password_safe.managedsystem.data.directory_id|integer
-beyondinsight_password_safe.managedsystem.Data.CloudID|beyondinsight_password_safe.managedsystem.data.cloud_id|integer
-beyondinsight_password_safe.managedsystem.Data.SystemName|beyondinsight_password_safe.managedsystem.data.system_name|keyword
-beyondinsight_password_safe.managedsystem.Data.Timeout|beyondinsight_password_safe.managedsystem.data.timeout|integer
-beyondinsight_password_safe.managedsystem.Data.PlatformID|beyondinsight_password_safe.managedsystem.data.platform_id|integer
-beyondinsight_password_safe.managedsystem.Data.NetBiosName|beyondinsight_password_safe.managedsystem.data.net_bios_name|keyword
-beyondinsight_password_safe.managedsystem.Data.ContactEmail|beyondinsight_password_safe.managedsystem.data.contact_email|keyword
-beyondinsight_password_safe.managedsystem.Data.Description|beyondinsight_password_safe.managedsystem.data.description|keyword
-beyondinsight_password_safe.managedsystem.Data.Port|beyondinsight_password_safe.managedsystem.data.port|integer
-beyondinsight_password_safe.managedsystem.Data.Timeout|beyondinsight_password_safe.managedsystem.data.timeout|integer
-beyondinsight_password_safe.managedsystem.Data. SshKeyEnforcementMode|beyondinsight_password_safe.managedsystem.data. sshKey_enforcement_mode|integer
-beyondinsight_password_safe.managedsystem.Data.PasswordRuleID|beyondinsight_password_safe.managedsystem.data.password_rule_id|integer
-beyondinsight_password_safe.managedsystem.Data.DSSKeyRuleID|beyondinsight_password_safe.managedsystem.data.dss_key_rule_id|integer
-beyondinsight_password_safe.managedsystem.Data.LoginAccountID|beyondinsight_password_safe.managedsystem.data.login_account_id|integer
-beyondinsight_password_safe.managedsystem.Data.AccountNameFormat|beyondinsight_password_safe.managedsystem.data.account_name_format|integer
-beyondinsight_password_safe.managedsystem.Data. OracleInternetDirectoryID |beyondinsight_password_safe.managedsystem.data. Oracle_Internet_Directory_id |keyword
-beyondinsight_password_safe.managedsystem.Data. OracleInternetDirectoryServiceName |beyondinsight_password_safe.managedsystem.data. oracle_internet_directory_service_name |keyword
-beyondinsight_password_safe.managedsystem.Data.ReleaseDuration|beyondinsight_password_safe.managedsystem.data.release_duration|integer
-beyondinsight_password_safe.managedsystem.Data.MaxReleaseDuration|beyondinsight_password_safe.managedsystem.data.max_release_duration|integer
-beyondinsight_password_safe.managedsystem.Data.ISAReleaseDuration |beyondinsight_password_safe.managedsystem.data.is_a_release_duration |integer
-beyondinsight_password_safe.managedsystem.Data.AutoManagementFlag |beyondinsight_password_safe.managedsystem.data.auto_management_flag |bool
-beyondinsight_password_safe.managedsystem.Data.FunctionalAccountID|beyondinsight_password_safe.managedsystem.data.functional_account_id |integer
-beyondinsight_password_safe.managedsystem.Data.ElevationCommand|beyondinsight_password_safe.managedsystem.data.elevation_command|keyword
-beyondinsight_password_safe.managedsystem.Data.CheckPasswordFlag|beyondinsight_password_safe.managedsystem.data.check_password_flag|bool
-beyondinsight_password_safe.managedsystem.Data.ChangePasswordAfterAnyReleaseFlag |beyondinsight_password_safe.managedsystem.data.change_password_after_any_release_flag|bool
-beyondinsight_password_safe.managedsystem.Data.ResetPasswordOnMismatchFlag |beyondinsight_password_safe.managedsystem.data.reset_password_on_mismatch_flag|bool
-beyondinsight_password_safe.managedsystem.Data.ChangeFrequencyType |beyondinsight_password_safe.managedsystem.data.change_frequency_type |keyword
-beyondinsight_password_safe.managedsystem.Data.ChangeFrequencyDays|beyondinsight_password_safe.managedsystem.data.change_frequency_days|integer
-beyondinsight_password_safe.managedsystem.Data.ChangeTime|beyondinsight_password_safe.managedsystem.data.change_time|keyword
-beyondinsight_password_safe.managedsystem.Data.RemoteClientType|beyondinsight_password_safe.managedsystem.data.remote_client_type|keyword
-beyondinsight_password_safe.managedsystem.Data.ApplicationHostID|beyondinsight_password_safe.managedsystem.data.application_host_id|integer
-beyondinsight_password_safe.managedsystem.Data.IsApplicationHost|beyondinsight_password_safe.managedsystem.data.is_application_host|bool
-beyondinsight_password_safe.managedsystem.Data.AccessURL|beyondinsight_password_safe.managedsystem.data.access_url|keyword
+| @timestamp | Event timestamp | date |
+| data_stream.dataset | Data stream dataset. | constant_keyword |
+| data_stream.namespace | Data stream namespace. | constant_keyword |
+| data_stream.type | Data stream type. | constant_keyword |
+| event.dataset |  | constant_keyword |
+| event.module |  | constant_keyword |
+| input.type | Input type | keyword |
+|beyondinsight_password_safe.managedsystem.total_count | Total count | integer |
+|beyondinsight_password_safe.managedsystem.data | Array of managed systems | nested |
+|beyondinsight_password_safe.managedsystem.data.workgroup_id | Work group id | integer |
+|beyondinsight_password_safe.managedsystem.data.host_name | Host name | keyword |
+|beyondinsight_password_safe.managedsystem.data.ipaddress | IP address | ip |
+|beyondinsight_password_safe.managedsystem.data.dns_name | DNS Name | keyword |
+|beyondinsight_password_safe.managedsystem.data.instance_name | Instance name | keyword |
+|beyondinsight_password_safe.managedsystem.data.is_default_instance | Is default instance | bool |
+|beyondinsight_password_safe.managedsystem.data.template | Template | keyword |
+|beyondinsight_password_safe.managedsystem.data.forest_name | Forest name | keyword |
+|beyondinsight_password_safe.managedsystem.data.use_ssl | Use SSL | bool |
+|beyondinsight_password_safe.managedsystem.data.managed_system_id | Managed system id | integer |
+|beyondinsight_password_safe.managedsystem.data.entity_type_id | Entity type id | integer |
+|beyondinsight_password_safe.managedsystem.data.asset_id | Asset id | integer |
+|beyondinsight_password_safe.managedsystem.data.database_id | Database id | integer |
+|beyondinsight_password_safe.managedsystem.data.directory_id | Directory id | integer |
+|beyondinsight_password_safe.managedsystem.data.cloud_id | Cloud id | integer |
+|beyondinsight_password_safe.managedsystem.data.system_name | System name | keyword |
+|beyondinsight_password_safe.managedsystem.data.timeout | Timeout | integer |
+|beyondinsight_password_safe.managedsystem.data.platform_id | Platform id | integer |
+|beyondinsight_password_safe.managedsystem.data.net_bios_name | Net BIOS name | keyword |
+|beyondinsight_password_safe.managedsystem.data.contact_email | Contact email | keyword |
+|beyondinsight_password_safe.managedsystem.data.description | Description | keyword |
+|beyondinsight_password_safe.managedsystem.data.port | Port | integer |
+|beyondinsight_password_safe.managedsystem.data.timeout | Timeout |integer |
+|beyondinsight_password_safe.managedsystem.data. sshKey_enforcement_mode | SSH key enforcement mode | integer |
+|beyondinsight_password_safe.managedsystem.data.password_rule_id | Password rule id |integer |
+|beyondinsight_password_safe.managedsystem.data.dss_key_rule_id | Dss key rule id | integer |
+|beyondinsight_password_safe.managedsystem.data.login_account_id | Login account id | integer |
+|beyondinsight_password_safe.managedsystem.data.account_name_format | Account name format | integer |
+|beyondinsight_password_safe.managedsystem.data.Oracle_Internet_Directory_id | Oracle internet directory id | keyword |
+|beyondinsight_password_safe.managedsystem.data.oracle_internet_directory_service_name | Oracle internet directory service name | keyword |
+|beyondinsight_password_safe.managedsystem.data.release_duration | Release duration | integer |
+|beyondinsight_password_safe.managedsystem.data.max_release_duration | Max release duration | integer |
+|beyondinsight_password_safe.managedsystem.data.is_a_release_duration | Is a release duration | integer |
+|beyondinsight_password_safe.managedsystem.data.auto_management_flag | Auto management flag | bool |
+|beyondinsight_password_safe.managedsystem.data.functional_account_id | Functional account id | integer |
+|beyondinsight_password_safe.managedsystem.data.elevation_command | Elevation command | keyword |
+|beyondinsight_password_safe.managedsystem.data.check_password_flag | Check password flag | bool |
+|beyondinsight_password_safe.managedsystem.data.change_password_after_any_release_flag | Change password after any release flag | bool |
+|beyondinsight_password_safe.managedsystem.data.reset_password_on_mismatch_flag | Reset password on mismatch flag | bool |
+|beyondinsight_password_safe.managedsystem.data.change_frequency_type | Change frequency type |keyword |
+|beyondinsight_password_safe.managedsystem.data.change_frequency_days | Frequency days | integer |
+|beyondinsight_password_safe.managedsystem.data.change_time | Change time | keyword |
+|beyondinsight_password_safe.managedsystem.data.remote_client_type | Remote client type | keyword |
+|beyondinsight_password_safe.managedsystem.data.application_host_id | Data application host id | integer |
+|beyondinsight_password_safe.managedsystem.data.is_application_host | Is application host | bool |
+|beyondinsight_password_safe.managedsystem.data.access_url | Access url | keyword |
 
 
 
 ### ManagedAccount
 
-ManagedSystem documents can be found using the API model by setting the filter `event.dataset :"beyondinsight_password_safe.managedaccount"`.
+ManagedAccount documents can be found using the API model by setting the filter `event.dataset :"beyondinsight_password_safe.managedaccount"`.
 
 Here is an example managedaccount document:
 
@@ -570,33 +567,38 @@ An example event for `managedaccount` looks as following:
  
 ```
 
+**ECS Field Reference**
+
+Please refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ecs-field-reference.html) for detailed information on ECS fields.
+
 The following non-ECS fields are used in managedaccount documents:
 
 **Exported fields**
 
-| Field | Target Field | Type |
+| Field | Description | Type |
 |---|---|---|
-|@timestamp (ECS field)|date
-beyondinsight_password_safe.managedaccount|Data_stream.dataset (ECS field)|Constand_keyword
-default|data_stream.namespace (ECS field)|constant_keyword
-logs|data_stream.type (ECS field)|constant_keyword
-“managedaccount”|tags (ECS field)|constant_keyword
-cel|input.type (ECS field)|keyword
-beyondinsight_password_safe.managedaccount. PlatformID|beyondinsight_password_safe.managedaccount. platform_id|keyword
-beyondinsight_password_safe.managedaccount. SystemId|beyondinsight_password_safe.managedaccount. system_id|keyword
-beyondinsight_password_safe.managedaccount. SystemName|beyondinsight_password_safe.managedaccount. system_name|keyword
-beyondinsight_password_safe.managedaccount. DomainName|beyondinsight_password_safe.managedaccount. domain_name|keyword
-beyondinsight_password_safe.managedaccount. AccountId|beyondinsight_password_safe.managedaccount. account_id|keyword
-beyondinsight_password_safe.managedaccount. AccountName|beyondinsight_password_safe.managedaccount. account_name|keyword
-beyondinsight_password_safe.managedaccount. InstanceName|beyondinsight_password_safe.managedaccount. instance_name|keyword
-beyondinsight_password_safe.asset. UserPrincipalName|beyondtrust.asset. user_principal_name|keyword
-beyondinsight_password_safe.managedaccount. ApplicationID|beyondinsight_password_safe.managedaccount. application_id|keyword
-beyondinsight_password_safe.managedaccount. ApplicationDisplayName|beyondinsight_password_safe.managedaccount. application_display_name|keyword
-beyondinsight_password_safe.managedaccount. DefaultReleaseDuration|beyondinsight_password_safe.managedaccount. default_release_duration|integer
-beyondinsight_password_safe.managedaccount. MaximumReleaseDuration|beyondinsight_password_safe.managedaccount. maximum_release_duration|integer
-beyondinsight_password_safe.managedaccount. LastChangeDate|beyondinsight_password_safe.managedaccount. last_change_date|date
-beyondinsight_password_safe.managedaccount. NextChangeDate|beyondinsight_password_safe.managedaccount. Next_change_date|date
-beyondinsight_password_safe.managedaccount. IsChanging|beyondinsight_password_safe.managedaccount. is_changing|bool
-beyondinsight_password_safe.managedaccount. ChangeState|beyondinsight_password_safe.managedaccount. change_state|integer
-beyondinsight_password_safe.managedaccount. IsISAAccess|beyondinsight_password_safe.managedaccount. is_is_access|bool
-beyondinsight_password_safe.managedaccount. PreferredNodeID|beyondinsight_password_safe.managedaccount. preferred_node_id|keyword
+| @timestamp | Event timestamp | date |
+| data_stream.dataset | Data stream dataset. | constant_keyword |
+| data_stream.namespace | Data stream namespace. | constant_keyword |
+| data_stream.type | Data stream type. | constant_keyword |
+| event.dataset |  | constant_keyword |
+| event.module |  | constant_keyword |
+| input.type | Input type | keyword |
+|beyondinsight_password_safe.managedaccount.platform_id | Platform id | keyword |
+|beyondinsight_password_safe.managedaccount.system_id | System id | keyword |
+|beyondinsight_password_safe.managedaccount.system_name | System name | keyword |
+|beyondinsight_password_safe.managedaccount.domain_name | Domain name | keyword |
+|beyondinsight_password_safe.managedaccount.account_id | Account id | keyword |
+|beyondinsight_password_safe.managedaccount.account_name | Account name | keyword |
+|beyondinsight_password_safe.managedaccount.instance_name | Instance name | keyword |
+|beyondtrust.asset. user_principal_name| User principal name | keyword |
+|beyondinsight_password_safe.managedaccount.application_id | Applicaiton id | keyword |
+|beyondinsight_password_safe.managedaccount.application_display_name | Application display name | keyword |
+|beyondinsight_password_safe.managedaccount.default_release_duration | Defalut release duration | integer |
+|beyondinsight_password_safe.managedaccount.maximum_release_duration | Maximum release duration | integer |
+|beyondinsight_password_safe.managedaccount.last_change_date | Last change date | date |
+|beyondinsight_password_safe.managedaccount. Next_change_date | Next change date | date |
+|beyondinsight_password_safe.managedaccount.is_changing | Is changing | bool |
+|beyondinsight_password_safe.managedaccount.change_state | Change state | integer |
+|beyondinsight_password_safe.managedaccount.is_is_access | Is is access | bool |
+|beyondinsight_password_safe.managedaccount.preferred_node_id | Preferred node id | keyword |
