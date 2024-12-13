@@ -150,13 +150,13 @@ The following non-ECS fields are used in useraudit documents:
 | event.dataset | Dataset | constant_keyword |
 | event.module | Module | constant_keyword |
 | input.type | Input type | keyword |
-| beyondinsight_password_safe.useraudit.audit_id | Audit id | keyword |
-| beyondinsight_password_safe.useraudit.action_type | Action type | keyword |
-| beyondinsight_password_safe.useraudit.section | Section | boolean |
-| user.id | User id | keyword |
-| user.name | User name | keyword |
-| host.ip | IP address | ip |
-| beyondinsight_password_safe.useraudit.create_date | Create date | date |
+| beyondinsight_password_safe.useraudit.audit_id | Unique identifier for the audit event | long |
+| beyondinsight_password_safe.useraudit.action_type | Action performed by the user (e.g., Login, Logout) | keyword |
+| beyondinsight_password_safe.useraudit.section | Section or feature where the action took place | boolean |
+| user.id | Unique identifier for the user | keyword |
+| user.name | Username of the user performing the action | keyword |
+| host.ip | IP address from which the user action originated | ip |
+| beyondinsight_password_safe.useraudit.create_date | Timestamp of when the user action was created | date |
 
 
 
