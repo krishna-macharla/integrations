@@ -1,27 +1,19 @@
-title: "BeyondInsight User Audit Events"
+title: "BeyondInsight Password Safe Managed Systems"
 type: logs
 streams:
   - input: cel
-    title: "Collect BeyondInsight User Audit Events"
-    description: "Collect User Audits from BeyondInsight via the BeyondInsight Events API"
+    title: BeyondInsight Password Safe Managed Systems Logs
+    description: BeyondInsight Password Safe Managed Systems Request Settings
     enabled: true
     template_path: cel.yml.hbs
     vars:
       - name: interval
         type: text
         title: Interval
-        description: Go Duration syntax (e.g., `10s`) for how often to fetch User Audits
+        description: Go Duration syntax (e.g., `10s`) for how often to fetch sign-in attempts
         show_user: false
         required: true
-        default: "10s"
-      - name: initial_interval
-        type: text
-        title: Initial Interval
-        multi: false
-        required: true
-        show_user: true
-        default: 90
-        description: How far back to pull the BeyondInsight User Audit Events from BeyondInsight User Audit  API.Default is 90 Days.
+        default: "60s"
       - name: limit
         type: integer
         title: Limit
@@ -34,7 +26,7 @@ streams:
         title: Tags
         multi: true
         show_user: true
-        description: Tags to be applied to the events, such as 'forwarded', 'BeyondInsight User Audit Event'
+        description: Tags to be applied to the events, such as 'forwarded', 'BeyondTrust signin_attempts'
       - name: preserve_original_event
         required: true
         show_user: true

@@ -1,13 +1,13 @@
 ---
-description: Pipeline for processing Managed Accounts logs
+description: Pipeline for processing BeyondInsight Password Safe Managed Systems logs
 processors:
   - rename:
       field: message
-      target_field: beyondinsight_password_safe.managed_system
+      target_field: beyondinsight_password_safe.managedsystem
 
   - fingerprint:
       fields:
-        - beyondinsight_password_safe.managed_system.ManagedSystemID
+        - beyondinsight_password_safe.managedsystem.ManagedSystemID
       target_field: "_id"
 
 ####################
@@ -61,8 +61,8 @@ processors:
           return snakeCaseMap;
         }
 
-        if (ctx.beyondinsight_password_safe.managed_system != null) {
-          ctx.beyondinsight_password_safe.managed_system = keysToSnakeCase(ctx.beyondinsight_password_safe.managed_system);
+        if (ctx.beyondinsight_password_safe.managedsystem != null) {
+          ctx.beyondinsight_password_safe.managedsystem = keysToSnakeCase(ctx.beyondinsight_password_safe.managedsystem);
         }
 
 
@@ -87,12 +87,14 @@ processors:
 
   - set:
       field: event.dataset
-      value: beyondinsight_password_safe.managed_system
+      value: beyondinsight_password_safe.managedsystem
 
   - set:
       field: event.module
       value: beyondinsight_password_safe
 
+  - drop:
+      if: ctx.beyondinsight_password_safe.managedsystem?.code == '401'
 on_failure:
   - append:
       field: error.message

@@ -17,6 +17,7 @@ resource.ssl.renegotiation: "freely"
 resource.ssl.verification_mode: "certificate"
 resource.url: {{url}}
 state:
+  limit: {{limit}}
   apikeytoken: {{apikeytoken}}
   password: {{password}}
   username: {{username}}
@@ -47,7 +48,10 @@ program: |-
   ).as(auth_cookie,
   	request(
   		"GET",
-  		state.url + "/Sessions"
+  		state.url + "/ManagedAccounts?" + {
+  			"limit": [string(state.limit)],
+  			"offset": [string(state.?cursor.offset.orValue(0))],
+  		}.format_query()
   	).with(
   		{
   			"Header": {
@@ -63,6 +67,7 @@ program: |-
   					"want_more": true,
   					"cursor": {
   						"auth_cookie": null,
+  						"offset": int(state.?cursor.offset.orValue(0)),
   					},
   				}
   			)
@@ -76,9 +81,10 @@ program: |-
   								?"event.original": state.?preserve_original_event.orValue(false) ? optional.of(e.encode_json()) : optional.none(),
   							}
   						),
-  						"want_more": false,
+  						"want_more": (size(body) > 0) ? true : false,
   						"cursor": {
   							"auth_cookie": auth_cookie,
+  							"offset": int(state.?cursor.offset.orValue(0)) + size(body),
   						},
   					}
   				)

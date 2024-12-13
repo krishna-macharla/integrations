@@ -1,9 +1,9 @@
-title: "Session"
+title: "BeyondInsight Password Safe Session"
 type: logs
 streams:
   - input: cel
-    title: Session Logs
-    description: Collect session logs
+    title: BeyondInsight Password Safe Sessions Logs
+    description: BeyondInsight Password Safe Sessions Request Settings
     enabled: true
     template_path: cel.yml.hbs
     vars:

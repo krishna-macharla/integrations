@@ -1,5 +1,5 @@
 ---
-description: Pipeline for processing sample logs
+description: Pipeline for processing BeyondInsight Password Safe Sessions logs
 processors:
   - rename:
       field: message
@@ -117,7 +117,8 @@ processors:
       formats: ["ISO8601"]
       ignore_failure: false
 
-
+  - drop:
+      if: ctx.beyondinsight_password_safe.session?.code == '401'
 ####################
 # Session Specific Fields #
 ####################

@@ -1,5 +1,5 @@
 ---
-description: Pipeline for processing beyondinsight and password safe user audits 
+description: Pipeline for processing BeyondInsight User Audit Events 
 processors:
   - rename:
       field: message
@@ -101,18 +101,24 @@ processors:
       field: user.name
       value: "{{{beyondinsight_password_safe.useraudit.user_name}}}"
       ignore_empty_value: true           
-
+  - drop:
+      if: ctx.beyondinsight_password_safe.useraudit?.code == '401'  
  ###################### Override host.ip ######################
+  - script:
+      lang: painless
+      source: |
+         def ipstring = ctx.beyondinsight_password_safe.useraudit.ipaddress.toString().splitOnToken(".");
+         def ip = String.valueOf(Integer.parseInt(ipstring[0]))+"."+String.valueOf(Integer.parseInt(ipstring[1]))+"."+String.valueOf(Integer.parseInt(ipstring[2]))+"."+String.valueOf(Integer.parseInt(ipstring[3]));
+         ctx.beyondinsight_password_safe.useraudit.ipaddress = ip;
+
   - convert:
       field: beyondinsight_password_safe.useraudit.ipaddress
       target_field: beyondinsight_password_safe.useraudit.ipaddress
       type: ip
-      ignore_missing: true
       if: ctx.beyondinsight_password_safe.useraudit?.ipaddress != null && ctx.beyondinsight_password_safe.useraudit.ipaddress != ''
-      on_failure:
-        - append:
-            field: error.message
-            value: 'Processor {{{_ingest.on_failure_processor_type}}} in pipeline {{{_ingest.on_failure_pipeline}}} failed with message: {{{_ingest.on_failure_message}}}'
+      ignore_failure: true 
+      ignore_missing: true
+
   - append:
       field: host.ip
       value: "{{{beyondinsight_password_safe.useraudit.ipaddress}}}"
@@ -121,6 +127,7 @@ processors:
       field: host.ip
       target_field: host.geo
       ignore_missing: true
+      ignore_failure: true
 ################### Set @timestamp ##########################
   - date:
      field: "beyondinsight_password_safe.useraudit.create_date"

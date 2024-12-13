@@ -7,7 +7,7 @@
       description: 'User audit related data fields'
       fields:
         - name: audit_id
-          type: long
+          type: integer
           description: 'Unique identifier for the audit event'
         - name: action_type
           type: keyword
@@ -22,9 +22,9 @@
           type: keyword
           description: 'Username of the user performing the action'
         - name: ipaddress
-          type: ip
+          type: keyword
           description: 'IP address from which the user action originated'
         - name: create_date
           type: date
-          format: strict_date_time
+          format: 'ISO8601'
           description: 'Timestamp of when the user action was created'
