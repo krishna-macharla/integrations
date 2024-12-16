@@ -68,8 +68,8 @@ rules:
                 "ManagedSystemID": 13,
                 "ManagedAccountID": null,
                 "ManagedAccountName": "example.com\\sdfsfdf",
-                "RecordKey": "3958d725d16119a95e64af424a7f813f1be4a6cd34earwr324454bcecce70ee37cbaed",
-                "Token": "bcb8c654b827a4465846c96b5d6dd8f2935c6a1f02f067fd0976dfsdf6d7370c22"
+                "RecordKey": "3958d725d16119a95e64af424a7f8dfsf13f1be4a6cd34earwr324454bcecce70ee37cbaed",
+                "Token": "bcb8c654b827a4465846c96b5d6dd8dsfsdf2935c6a1f02f067fd0976dfsdf6d7370c22"
               }
             ]
   - path:  "/BeyondTrust/api/public/v3/ManagedAccounts"
