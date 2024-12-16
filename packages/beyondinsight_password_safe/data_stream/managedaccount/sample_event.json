@@ -1,9 +1,9 @@
 {
-    "@timestamp": "2024-12-16T07:13:16.138Z",
+    "@timestamp": "2024-12-16T07:58:38.520Z",
     "agent": {
-        "ephemeral_id": "93d06e27-f815-4695-93f0-3659e88d9f88",
-        "id": "a3c03e05-8247-46ca-b785-aebffcec1266",
-        "name": "elastic-agent-70978",
+        "ephemeral_id": "7e6ce078-4474-4b20-9372-553c2476d61c",
+        "id": "6856414b-676a-4d83-b8bc-21c7ca1db876",
+        "name": "elastic-agent-91621",
         "type": "filebeat",
         "version": "8.12.2"
     },
@@ -25,14 +25,14 @@
     },
     "data_stream": {
         "dataset": "beyondinsight_password_safe.managedaccount",
-        "namespace": "19052",
+        "namespace": "79526",
         "type": "logs"
     },
     "ecs": {
         "version": "8.11.0"
     },
     "elastic_agent": {
-        "id": "a3c03e05-8247-46ca-b785-aebffcec1266",
+        "id": "6856414b-676a-4d83-b8bc-21c7ca1db876",
         "snapshot": false,
         "version": "8.12.2"
     },
@@ -42,7 +42,7 @@
             "iam"
         ],
         "dataset": "beyondinsight_password_safe.managedaccount",
-        "ingested": "2024-12-16T07:13:19Z",
+        "ingested": "2024-12-16T07:58:41Z",
         "kind": "event",
         "module": "beyondinsight_password_safe",
         "type": [
@@ -52,17 +52,17 @@
     "host": {
         "architecture": "aarch64",
         "containerized": false,
-        "hostname": "elastic-agent-70978",
+        "hostname": "elastic-agent-91621",
         "id": "29b44b57f32c4ff282841a8a4406ef95",
         "ip": [
-            "192.168.144.2",
-            "192.168.128.4"
+            "172.20.0.2",
+            "172.19.0.4"
         ],
         "mac": [
-            "02-42-C0-A8-80-04",
-            "02-42-C0-A8-90-02"
+            "02-42-AC-13-00-04",
+            "02-42-AC-14-00-02"
         ],
-        "name": "elastic-agent-70978",
+        "name": "elastic-agent-91621",
         "os": {
             "codename": "focal",
             "family": "debian",
