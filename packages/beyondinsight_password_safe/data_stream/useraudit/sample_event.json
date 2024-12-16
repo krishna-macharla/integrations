@@ -1,9 +1,9 @@
 {
     "@timestamp": "2024-12-12T10:24:26.323Z",
     "agent": {
-        "ephemeral_id": "92f85eda-d1ba-4550-97e6-1808d5d71d0e",
-        "id": "c7d229ac-728d-4180-a891-6cf99e1f1131",
-        "name": "elastic-agent-79497",
+        "ephemeral_id": "b7ddbe32-57a8-45d7-9572-0cdd0e9bfe51",
+        "id": "a46d0f82-e28d-4660-9609-cc3062fc3d7d",
+        "name": "elastic-agent-65804",
         "type": "filebeat",
         "version": "8.12.2"
     },
@@ -20,14 +20,14 @@
     },
     "data_stream": {
         "dataset": "beyondinsight_password_safe.useraudit",
-        "namespace": "97507",
+        "namespace": "47141",
         "type": "logs"
     },
     "ecs": {
         "version": "8.11.0"
     },
     "elastic_agent": {
-        "id": "c7d229ac-728d-4180-a891-6cf99e1f1131",
+        "id": "a46d0f82-e28d-4660-9609-cc3062fc3d7d",
         "snapshot": false,
         "version": "8.12.2"
     },
@@ -38,7 +38,7 @@
         ],
         "dataset": "beyondinsight_password_safe.useraudit",
         "id": "1",
-        "ingested": "2024-12-13T14:10:35Z",
+        "ingested": "2024-12-16T07:16:15Z",
         "kind": "event",
         "module": "beyondinsight_password_safe",
         "type": [
@@ -61,18 +61,18 @@
             "region_iso_code": "US-WA",
             "region_name": "Washington"
         },
-        "hostname": "elastic-agent-79497",
+        "hostname": "elastic-agent-65804",
         "id": "29b44b57f32c4ff282841a8a4406ef95",
         "ip": [
-            "172.22.0.2",
-            "172.21.0.4",
+            "192.168.240.2",
+            "192.168.128.4",
             "216.160.83.56"
         ],
         "mac": [
-            "02-42-AC-15-00-04",
-            "02-42-AC-16-00-02"
+            "02-42-C0-A8-80-04",
+            "02-42-C0-A8-F0-02"
         ],
-        "name": "elastic-agent-79497",
+        "name": "elastic-agent-65804",
         "os": {
             "codename": "focal",
             "family": "debian",
