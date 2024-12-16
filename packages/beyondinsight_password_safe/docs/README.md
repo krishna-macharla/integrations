@@ -20,8 +20,6 @@ This data stream utilizes the BeyondInsight API's `/v3//ManagedAccounts` endpoin
 - **`asset`** Provides a list of assets.  
 This data stream utilizes the BeyondInsight API's `/v3//assets` endpoint.
 
-- **`request`** Provides a list of managed accounts.  
-This data stream utilizes the BeyondInsight API's `/v3//requests` endpoint.
 
 ## Requirements
 
@@ -633,8 +631,8 @@ The following non-ECS fields are used in asset documents:
 |beyondinsight_password_safe.asset.asset_name | Asset name | keyword |
 |beyondinsight_password_safe.asset.dns_name | DNS name | keyword |
 |beyondinsight_password_safe.asset.domain_name | Domain name | keyword |
-|beyondinsight_password_safe.asset. host.ip | Next change date | ip |
-|beyondinsight_password_safe.asset.host.mac | Is changing | keyword |
-|beyondinsight_password_safe.asset.asset_type | Change state | keyword |
-|beyondinsight_password_safe.asset.os.name | Is is access | keyword |
+|host.ip | Host IP address | ip |
+|beyondinsight_password_safe.asset.asset_type | Asset type | keyword |
+|os.name | Operating System | keyword |
 |beyondinsight_password_safe.asset.create_date | Create date | date |
+|beyondinsight_password_safe.asset.last_update_date | Last update date | date |
