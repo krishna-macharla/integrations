@@ -12,13 +12,13 @@ This data stream utilizes the BeyondInsight API's `/v3/UserAudits` endpoint.
 This data stream utilizes the BeyondInsight API's `/v3/Sessions` endpoint.
 
 - **`managedsystem`** Provides a list of managed systems.  
-This data stream utilizes the BeyondInsight API's `/v3//ManagedSystems` endpoint.
+This data stream utilizes the BeyondInsight API's `/v3/ManagedSystems` endpoint.
 
 - **`managedaccount`** Provides a list of managed accounts.  
-This data stream utilizes the BeyondInsight API's `/v3//ManagedAccounts` endpoint.
+This data stream utilizes the BeyondInsight API's `/v3/ManagedAccounts` endpoint.
 
 - **`asset`** Provides a list of assets.  
-This data stream utilizes the BeyondInsight API's `/v3//assets` endpoint.
+This data stream utilizes the BeyondInsight API's `/v3/assets` endpoint.
 
 
 ## Requirements
@@ -272,14 +272,20 @@ The following non-ECS fields are used in session documents:
 | event.dataset |  | constant_keyword |
 | event.module |  | constant_keyword |
 | input.type | Input type | keyword |
-| beyondinsight_password_safe.session.sessionid | Session id | keyword |
-| beyondinsight_password_safe.session.user_id | User id | keyword |
+| beyondinsight_password_safe.session.sessionid |  ID of the Session. | keyword |
+| beyondinsight_password_safe.session.user_id | ID of the user that requested the session | keyword |
 | event.start | Session state time | date |
 | event.end | Session end date | date |
+| beyondinsight_password_safe.session.status | Session status 0: Not Started 1: In Progress 2: Completed 5: Locked 7: Terminated (deprecated) 8: Logged Off 9: Disconnected (RDP only) | integer |
+ beyondinsight_password_safe.session.ArchiveStatus | Session archive status (applicable only when Session Archiving is enabled and configured) 0: Not Archived 1: Archived 2: Restoring (from Archive Repository) 3: Archiving (from Node) 4: Session Not Found (in Archive Repository) 5: Archive Repository Offline/Inaccessible 6: Unknown | integer |
 | beyondinsight_password_safe.session.duration | Session duration | integer |
-| beyondinsight_password_safe.session.asset_name | Asset name | keyword |
-| beyondinsight_password_safe.session.record_key | Record key | keyword |
-| beyondinsight_password_safe.session.protocol | Protocol | keyword |
+| beyondinsight_password_safe.session.asset_name | Name of the target Managed System. | keyword |
+| beyondinsight_password_safe.session.record_key | The Record Key used for Session replay. | keyword |
+| beyondinsight_password_safe.session.protocol | Session protocol 0: RDP 1: SSH | keyword |
+| beyondinsight_password_safe.session.ManagedSystemID | ID of the target Managed System. | integer |
+| beyondinsight_password_safe.session.ManagedAccountID | ID of the target Managed Account. | integer |
+| beyondinsight_password_safe.session.ManagedAccountName | Name of the target Managed Account. | keyword |
+
 
 ### ManagedSystem
 
@@ -421,43 +427,44 @@ The following non-ECS fields are used in managedsystem documents:
 |beyondinsight_password_safe.managedsystem.data.template | Template | keyword |
 |beyondinsight_password_safe.managedsystem.data.forest_name | Forest name | keyword |
 |beyondinsight_password_safe.managedsystem.data.use_ssl | Use SSL | bool |
-|beyondinsight_password_safe.managedsystem.data.managed_system_id | Managed system id | integer |
+|beyondinsight_password_safe.managedsystem.data.managed_system_id | ID of the managed system | integer |
 |beyondinsight_password_safe.managedsystem.data.entity_type_id | Entity type id | integer |
-|beyondinsight_password_safe.managedsystem.data.asset_id | Asset id | integer |
-|beyondinsight_password_safe.managedsystem.data.database_id | Database id | integer |
-|beyondinsight_password_safe.managedsystem.data.directory_id | Directory id | integer |
-|beyondinsight_password_safe.managedsystem.data.cloud_id | Cloud id | integer |
-|beyondinsight_password_safe.managedsystem.data.system_name | System name | keyword |
+|beyondinsight_password_safe.managedsystem.data.asset_id | Asset ID; set if the managed system is an asset or a database | integer |
+|beyondinsight_password_safe.managedsystem.data.database_id | Database ID; set if the managed system is a database | integer |
+|beyondinsight_password_safe.managedsystem.data.directory_id | Directory ID; set if the managed system is a directory | integer |
+|beyondinsight_password_safe.managedsystem.data.cloud_id | Cloud system ID; set if the managed system is a cloud system | integer |
+|beyondinsight_password_safe.managedsystem.data.system_name | Name of the related entity (asset, directory, database, or cloud). | keyword |
 |beyondinsight_password_safe.managedsystem.data.timeout | Timeout | integer |
-|beyondinsight_password_safe.managedsystem.data.platform_id | Platform id | integer |
-|beyondinsight_password_safe.managedsystem.data.net_bios_name | Net BIOS name | keyword |
+|beyondinsight_password_safe.managedsystem.data.platform_id | ID of the managed system platform. | integer |
+|beyondinsight_password_safe.managedsystem.data.net_bios_name | (Managed domains only) Domain NetBIOS name. Setting this value will allow Password Safe to fall back to the NetBIOS name if needed | keyword |
 |beyondinsight_password_safe.managedsystem.data.contact_email | Contact email | keyword |
 |beyondinsight_password_safe.managedsystem.data.description | Description | keyword |
-|beyondinsight_password_safe.managedsystem.data.port | Port | integer |
-|beyondinsight_password_safe.managedsystem.data.timeout | Timeout |integer |
-|beyondinsight_password_safe.managedsystem.data. sshKey_enforcement_mode | SSH key enforcement mode | integer |
-|beyondinsight_password_safe.managedsystem.data.password_rule_id | Password rule id |integer |
-|beyondinsight_password_safe.managedsystem.data.dss_key_rule_id | Dss key rule id | integer |
-|beyondinsight_password_safe.managedsystem.data.login_account_id | Login account id | integer |
+|beyondinsight_password_safe.managedsystem.data.port | The port used to connect to the host. If null and the related Platform.PortFlag is true, Password Safe uses Platform.DefaultPort for communication | integer |
+|beyondinsight_password_safe.managedsystem.data.timeout | (seconds) Connection timeout. Length of time in seconds before a slow or unresponsive connection to the system fails. |integer |
+|beyondinsight_password_safe.managedsystem.data. sshKey_enforcement_mode | Enforcement mode for SSH host keys. 0: None.1: Auto. Auto accept initial key.2: Strict. Manually accept keys. | integer |
+|beyondinsight_password_safe.managedsystem.data.password_rule_id | ID of the default password rule assigned to managed accounts created under this managed system|integer |
+|beyondinsight_password_safe.managedsystem.data.dss_key_rule_id | ID of the default DSS key rule assigned to managed accounts created under this managed system | integer |
+|beyondinsight_password_safe.managedsystem.data.login_account_id | ID of the functional account used for SSH session logins | integer |
 |beyondinsight_password_safe.managedsystem.data.account_name_format | Account name format | integer |
 |beyondinsight_password_safe.managedsystem.data.Oracle_Internet_Directory_id | Oracle internet directory id | keyword |
 |beyondinsight_password_safe.managedsystem.data.oracle_internet_directory_service_name | Oracle internet directory service name | keyword |
-|beyondinsight_password_safe.managedsystem.data.release_duration | Release duration | integer |
-|beyondinsight_password_safe.managedsystem.data.max_release_duration | Max release duration | integer |
-|beyondinsight_password_safe.managedsystem.data.is_a_release_duration | Is a release duration | integer |
-|beyondinsight_password_safe.managedsystem.data.auto_management_flag | Auto management flag | bool |
-|beyondinsight_password_safe.managedsystem.data.functional_account_id | Functional account id | integer |
-|beyondinsight_password_safe.managedsystem.data.elevation_command | Elevation command | keyword |
-|beyondinsight_password_safe.managedsystem.data.check_password_flag | Check password flag | bool |
-|beyondinsight_password_safe.managedsystem.data.change_password_after_any_release_flag | Change password after any release flag | bool |
-|beyondinsight_password_safe.managedsystem.data.reset_password_on_mismatch_flag | Reset password on mismatch flag | bool |
-|beyondinsight_password_safe.managedsystem.data.change_frequency_type | Change frequency type |keyword |
-|beyondinsight_password_safe.managedsystem.data.change_frequency_days | Frequency days | integer |
-|beyondinsight_password_safe.managedsystem.data.change_time | Change time | keyword |
-|beyondinsight_password_safe.managedsystem.data.remote_client_type | Remote client type | keyword |
-|beyondinsight_password_safe.managedsystem.data.application_host_id | Data application host id | integer |
-|beyondinsight_password_safe.managedsystem.data.is_application_host | Is application host | bool |
-|beyondinsight_password_safe.managedsystem.data.access_url | Access url | keyword |
+|beyondinsight_password_safe.managedsystem.data.release_duration | (minutes: 1-525600) Default release duration. | integer |
+|beyondinsight_password_safe.managedsystem.data.max_release_duration | (minutes: 1-525600) Default maximum release duration | integer |
+|beyondinsight_password_safe.managedsystem.data.is_a_release_duration | (minutes: 1-525600) Default Information Systems Administrator (ISA) release duration | integer |
+|beyondinsight_password_safe.managedsystem.data.auto_management_flag | True if password auto-management is enabled, otherwise false. | bool |
+|beyondinsight_password_safe.managedsystem.data.functional_account_id | ID of the functional account used for local managed account password changes. | integer |
+|beyondinsight_password_safe.managedsystem.data.elevation_command | Elevation command to use (sudo, pbrun, pmrun). | keyword |
+|beyondinsight_password_safe.managedsystem.data.check_password_flag | True to enable password testing, otherwise false. | bool |
+|beyondinsight_password_safe.managedsystem.data.change_password_after_any_release_flag |True to change passwords on release of a request, otherwise false. | bool |
+|beyondinsight_password_safe.managedsystem.data.reset_password_on_mismatch_flag | True to queue a password change when scheduled password test fails, otherwise false.
+ | bool |
+|beyondinsight_password_safe.managedsystem.data.change_frequency_type | The change frequency for scheduled password changes |keyword |
+|beyondinsight_password_safe.managedsystem.data.change_frequency_days | (days: 1-90) When ChangeFrequencyType is xdays, password changes take place this configured number of days. | integer |
+|beyondinsight_password_safe.managedsystem.data.change_time | (24hr format: 00:00-23:59) UTC time of day scheduled password changes take place. | keyword |
+|beyondinsight_password_safe.managedsystem.data.remote_client_type | The type of remote client to use. None: No remote client.EPM: Endpoint Privilege Management. | keyword |
+|beyondinsight_password_safe.managedsystem.data.application_host_id | Managed system ID of the target application host. Must be an ID of a managed system whose IsApplicationHost = true. | integer |
+|beyondinsight_password_safe.managedsystem.data.is_application_host | True if the managed system can be used as an application host, otherwise false. Can be set when the Platform.ApplicationHostFlag = true, and cannot be set when ApplicationHostID has a value. | bool |
+|beyondinsight_password_safe.managedsystem.data.access_url | The URL used for cloud access (applies to cloud systems only). | keyword |
 
 
 
@@ -575,24 +582,24 @@ The following non-ECS fields are used in managedaccount documents:
 | event.dataset |  | constant_keyword |
 | event.module |  | constant_keyword |
 | input.type | Input type | keyword |
-|beyondinsight_password_safe.managedaccount.platform_id | Platform id | keyword |
-|beyondinsight_password_safe.managedaccount.system_id | System id | keyword |
-|beyondinsight_password_safe.managedaccount.system_name | System name | keyword |
-|beyondinsight_password_safe.managedaccount.domain_name | Domain name | keyword |
-|beyondinsight_password_safe.managedaccount.account_id | Account id | keyword |
-|beyondinsight_password_safe.managedaccount.account_name | Account name | keyword |
-|beyondinsight_password_safe.managedaccount.instance_name | Instance name | keyword |
-|beyondtrust.asset. user_principal_name| User principal name | keyword |
-|beyondinsight_password_safe.managedaccount.application_id | Applicaiton id | keyword |
-|beyondinsight_password_safe.managedaccount.application_display_name | Application display name | keyword |
-|beyondinsight_password_safe.managedaccount.default_release_duration | Defalut release duration | integer |
+|beyondinsight_password_safe.managedaccount.platform_id | ID of the managed system platform | keyword |
+|beyondinsight_password_safe.managedaccount.system_id | ID of the managed system | keyword |
+|beyondinsight_password_safe.managedaccount.system_name | Name of the managed system | keyword |
+|beyondinsight_password_safe.managedaccount.domain_name | The domain name for a domain-type account | keyword |
+|beyondinsight_password_safe.managedaccount.account_id | ID of the managed account | keyword |
+|beyondinsight_password_safe.managedaccount.account_name | Name of the managed account | keyword |
+|beyondinsight_password_safe.managedaccount.instance_name | Database instance name of a database-type managed system, or empty for the default instance | keyword |
+|beyondtrust.asset. user_principal_name| User Principal Name of the managed account | keyword |
+|beyondinsight_password_safe.managedaccount.application_id | ID of the application for application-based access | keyword |
+|beyondinsight_password_safe.managedaccount.application_display_name | Display name of the application for application-based access | keyword |
+|beyondinsight_password_safe.managedaccount.default_release_duration | Default release duration | integer |
 |beyondinsight_password_safe.managedaccount.maximum_release_duration | Maximum release duration | integer |
-|beyondinsight_password_safe.managedaccount.last_change_date | Last change date | date |
-|beyondinsight_password_safe.managedaccount. Next_change_date | Next change date | date |
-|beyondinsight_password_safe.managedaccount.is_changing | Is changing | bool |
-|beyondinsight_password_safe.managedaccount.change_state | Change state | integer |
-|beyondinsight_password_safe.managedaccount.is_is_access | Is is access | bool |
-|beyondinsight_password_safe.managedaccount.preferred_node_id | Preferred node id | keyword |
+|beyondinsight_password_safe.managedaccount.last_change_date | The date and time of the last password change | date |
+|beyondinsight_password_safe.managedaccount. Next_change_date | The date and time of the next password change | date |
+|beyondinsight_password_safe.managedaccount.is_changing | True if the account credentials are in the process of changing, otherwise false | bool |
+|beyondinsight_password_safe.managedaccount.change_state | ChangeState: The change state of the account credentials: 0: Idle / no change taking place or scheduled within  minutes. 1: Changing / managed account credential currently changing. 2: Queued / managed account credential is queued to change or scheduled to change within 5 minutes. | integer |
+|beyondinsight_password_safe.managedaccount.is_is_access | True if the account is for Information Systems Administrator (ISA) access, otherwise false. | bool |
+|beyondinsight_password_safe.managedaccount.preferred_node_id | ID of the node that is preferred for establishing sessions. If no node is preferred, returns the local node ID | keyword |
 
 ### Asset
 
@@ -604,7 +611,96 @@ An example event for `asset` looks as following:
 
 ```json
 {
-       
+        "_index": ".ds-logs-beyondinsight_password_safe.assets-default-2024.12.17-000003",
+        "_id": "rODK63iwttrLrnvuyG8+/D7xxMw=",
+        "_score": null,
+        "_ignored": [
+          "beyondinsight_password_safe.assets.last_update_date"
+        ],
+        "_source": {
+          "input": {
+            "type": "cel"
+          },
+          "agent": {
+            "name": "docker-fleet-agent",
+            "id": "a447c2bb-3c3f-4aa0-a636-cb93aaeab324",
+            "ephemeral_id": "a5cec388-f06a-4cd8-9a13-1b4c1339993c",
+            "type": "filebeat",
+            "version": "8.12.2"
+          },
+          "beyondinsight_password_safe": {
+            "assets": {
+              "ipaddress": "172.16.201.219",
+              "domain_name": "example.com",
+              "asset_name": "InteractionMynahBird",
+              "workgroup_id": 1,
+              "asset_type": "UNKNOWN",
+              "operating_system": "ExampleOS",
+              "asset_id": 23,
+              "create_date": "2024-12-10T09:14:28.653Z",
+              "dns_name": "InteractionMynahBird.example.com",
+              "last_update_date": "2024-12-10T09:14:28.653Z"
+            }
+          },
+          "@timestamp": "2024-12-17T07:40:23.678Z",
+          "ecs": {
+            "version": "8.11.0"
+          },
+          "os": {
+            "name": "ExampleOS"
+          },
+          "data_stream": {
+            "namespace": "default",
+            "type": "logs",
+            "dataset": "beyondinsight_password_safe.assets"
+          },
+          "elastic_agent": {
+            "id": "a447c2bb-3c3f-4aa0-a636-cb93aaeab324",
+            "version": "8.12.2",
+            "snapshot": false
+          },
+          "host": {
+            "hostname": "docker-fleet-agent",
+            "os": {
+              "kernel": "5.15.167.4-microsoft-standard-WSL2",
+              "codename": "focal",
+              "name": "Ubuntu",
+              "type": "linux",
+              "family": "debian",
+              "version": "20.04.6 LTS (Focal Fossa)",
+              "platform": "ubuntu"
+            },
+            "containerized": true,
+            "ip": [
+              "172.18.0.4",
+              "172.16.201.219",
+              "172.16.201.219"
+            ],
+            "name": "docker-fleet-agent",
+            "id": "009f8d5d825944429c9ae8d252b0019a",
+            "mac": [
+              "02-42-AC-12-00-04",
+              ""
+            ],
+            "architecture": "x86_64"
+          },
+          "event": {
+            "agent_id_status": "verified",
+            "ingested": "2024-12-17T07:40:24Z",
+            "kind": "asset",
+            "module": "beyondinsight_password_safe",
+            "category": [
+              "host"
+            ],
+            "type": [
+              "info"
+            ],
+            "dataset": "beyondinsight_password_safe.assets"
+          }
+        },
+        "sort": [
+          1734421223678
+        ]
       }
  
 ```
