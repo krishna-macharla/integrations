@@ -1,0 +1,93 @@
+{
+    "@timestamp": "2024-12-12T10:24:26.323Z",
+    "agent": {
+        "ephemeral_id": "dd58e118-18b6-418f-ac84-8976d2d1cf02",
+        "id": "19da7f87-a10b-4959-9e01-c2f3ef7ebe15",
+        "name": "elastic-agent-13332",
+        "type": "filebeat",
+        "version": "8.12.2"
+    },
+    "beyondinsight_password_safe": {
+        "useraudit": {
+            "action_type": "Login",
+            "audit_id": 1,
+            "create_date": "2024-12-12T10:24:26.323Z",
+            "ipaddress": "216.160.83.56",
+            "section": "PMM API SignAppIn",
+            "user_id": 6,
+            "user_name": "test.user@example.com"
+        }
+    },
+    "data_stream": {
+        "dataset": "beyondinsight_password_safe.useraudit",
+        "namespace": "15267",
+        "type": "logs"
+    },
+    "ecs": {
+        "version": "8.11.0"
+    },
+    "elastic_agent": {
+        "id": "19da7f87-a10b-4959-9e01-c2f3ef7ebe15",
+        "snapshot": false,
+        "version": "8.12.2"
+    },
+    "event": {
+        "agent_id_status": "verified",
+        "category": [
+            "iam"
+        ],
+        "dataset": "beyondinsight_password_safe.useraudit",
+        "id": "1",
+        "ingested": "2024-12-16T08:38:01Z",
+        "kind": "event",
+        "module": "beyondinsight_password_safe",
+        "type": [
+            "info"
+        ]
+    },
+    "event.original": "{\"ActionType\":\"Login\",\"AuditID\":1,\"CreateDate\":\"2024-12-12T10:24:26.323Z\",\"IPAddress\":\"216.160.83.56\",\"Section\":\"PMM API SignAppIn\",\"UserID\":6,\"UserName\":\"test.user@example.com\"}",
+    "host": {
+        "architecture": "aarch64",
+        "containerized": false,
+        "geo": {
+            "city_name": "Milton",
+            "continent_name": "North America",
+            "country_iso_code": "US",
+            "country_name": "United States",
+            "location": {
+                "lat": 47.2513,
+                "lon": -122.3149
+            },
+            "region_iso_code": "US-WA",
+            "region_name": "Washington"
+        },
+        "hostname": "elastic-agent-13332",
+        "id": "29b44b57f32c4ff282841a8a4406ef95",
+        "ip": [
+            "172.26.0.2",
+            "172.19.0.4",
+            "216.160.83.56"
+        ],
+        "mac": [
+            "02-42-AC-13-00-04",
+            "02-42-AC-1A-00-02"
+        ],
+        "name": "elastic-agent-13332",
+        "os": {
+            "codename": "focal",
+            "family": "debian",
+            "kernel": "6.6.51-0-virt",
+            "name": "Ubuntu",
+            "platform": "ubuntu",
+            "type": "linux",
+            "version": "20.04.6 LTS (Focal Fossa)"
+        }
+    },
+    "input": {
+        "type": "cel"
+    },
+    "user": {
+        "id": "6",
+        "name": "test.user@example.com"
+    }
+}

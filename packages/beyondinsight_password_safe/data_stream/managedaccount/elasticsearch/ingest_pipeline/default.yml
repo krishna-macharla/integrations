@@ -102,14 +102,18 @@ processors:
       if: "ctx.beyondinsight_password_safe?.managedaccount?.last_change_date != null"
       field: "beyondinsight_password_safe.managedaccount.last_change_date"
       target_field: "beyondinsight_password_safe.managedaccount.last_change_date"
-      formats: ["yyyy-MM-dd'T'HH:mm:ss.SS", "ISO8601"]
+      formats: 
+        - "yyyy-MM-dd'T'HH:mm:ss.SS"
+        - "ISO8601"
       ignore_failure: false
 
   - date:
       if: "ctx.beyondinsight_password_safe?.managedaccount?.next_change_date != null"
       field: "beyondinsight_password_safe.managedaccount.next_change_date"
       target_field: "beyondinsight_password_safe.managedaccount.next_change_date"
-      formats: [ "yyyy-MM-dd'T'HH:mm:ss.SS", "ISO8601" ]
+      formats:
+        - "yyyy-MM-dd'T'HH:mm:ss.SS"
+        - "ISO8601"
       ignore_failure: false
 
   - script:
