@@ -150,7 +150,7 @@ The following non-ECS fields are used in useraudit documents:
 | input.type | Input type | keyword |
 | beyondinsight_password_safe.useraudit.audit_id | Unique identifier for the audit event | long |
 | beyondinsight_password_safe.useraudit.action_type | Action performed by the user (e.g., Login, Logout) | keyword |
-| beyondinsight_password_safe.useraudit.section | Section or feature where the action took place | boolean |
+| beyondinsight_password_safe.useraudit.section | Section or feature where the action took place | keyword |
 | user.id | Unique identifier for the user | keyword |
 | user.name | Username of the user performing the action | keyword |
 | host.ip | IP address from which the user action originated | ip |
@@ -583,11 +583,11 @@ The following non-ECS fields are used in managedaccount documents:
 | event.module |  | constant_keyword |
 | input.type | Input type | keyword |
 |beyondinsight_password_safe.managedaccount.platform_id | ID of the managed system platform | keyword |
-|beyondinsight_password_safe.managedaccount.system_id | ID of the managed system | keyword |
-|beyondinsight_password_safe.managedaccount.system_name | Name of the managed system | keyword |
-|beyondinsight_password_safe.managedaccount.domain_name | The domain name for a domain-type account | keyword |
-|beyondinsight_password_safe.managedaccount.account_id | ID of the managed account | keyword |
-|beyondinsight_password_safe.managedaccount.account_name | Name of the managed account | keyword |
+|host.id | ID of the managed system | keyword |
+|host.hostname | Name of the managed system | keyword |
+|host.domain | The domain name for a domain-type account | keyword |
+|user.id | ID of the managed account | keyword |
+|user.name | Name of the managed account | keyword |
 |beyondinsight_password_safe.managedaccount.instance_name | Database instance name of a database-type managed system, or empty for the default instance | keyword |
 |beyondtrust.asset. user_principal_name| User Principal Name of the managed account | keyword |
 |beyondinsight_password_safe.managedaccount.application_id | ID of the application for application-based access | keyword |
@@ -726,7 +726,7 @@ The following non-ECS fields are used in asset documents:
 |beyondinsight_password_safe.asset.asset_id | Asset id | keyword |
 |beyondinsight_password_safe.asset.asset_name | Asset name | keyword |
 |beyondinsight_password_safe.asset.dns_name | DNS name | keyword |
-|beyondinsight_password_safe.asset.domain_name | Domain name | keyword |
+|host.domain | Domain name | keyword |
 |host.ip | Host IP address | ip |
 |beyondinsight_password_safe.asset.asset_type | Asset type | keyword |
 |os.name | Operating System | keyword |
